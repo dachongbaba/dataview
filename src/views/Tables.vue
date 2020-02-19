@@ -9,7 +9,7 @@ import { VuejsDatatableFactory } from "vuejs-datatable";
 Vue.use(VuejsDatatableFactory);
 
 export default {
-  name: "DataTable",
+  name: "Tables",
   data: {
     columns: [
       { label: "id", field: "id" },
