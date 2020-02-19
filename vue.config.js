@@ -12,4 +12,8 @@ module.exports = {
       }),
     ],
   },
+
+  devServer: {
+    proxy: 'http://docker.meixiu.mobi:58767'
+  }
 }

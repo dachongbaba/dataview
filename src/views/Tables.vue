@@ -1,12 +1,15 @@
 <template>
-  <div class="container-full">
-    <datatable class="container table" :columns="columns" :data="rows" />
+  <div class="table-responsive">
+    <datatable class="table table-striped" :columns="datas.columns" :data="datas.rows" />
   </div>
 </template>
 
 <script>
+import config from '../config';
 import Vue from "vue";
 import { VuejsDatatableFactory } from "vuejs-datatable";
+import axios from 'axios';
+// import loadsh from 'loadsh';
 
 Vue.use(VuejsDatatableFactory);
 
@@ -14,37 +17,39 @@ export default {
   name: "Tables",
   data: function () {
     return {
-      columns: [
-        { label: "id", field: "id" },
-        {
-          label: "Username",
-          field: "user.username",
-          headerClass: "class-in-header second-class"
-        },
-        { label: "First Name", field: "user.firstName" },
-        { label: "Last Name", field: "user.lastName" },
-        { label: "Email", field: "user.email" },
-        {
-          label: "Address",
-          representedAs: ({ address, city, state }) =>
-            `${address}<br />${city}, ${state}`,
-          interpolate: true
+      datas: config.defaultDatas
+    }
+  },
+  created() {
+    this.fetch();
+  },
+  computed: {
+    now() {
+      return Date.now()
+    }
+  },
+  methods: {
+    fetch() {
+      var fetch = '/data/search/m2/v1/aggregation/common';
+      var data = {
+        params: {},
+        tableName: 'o_express',
+        query: '{"bool":{"must":[]}}',
+        page: 1,
+        size: 20,
+        sort: ''
+      }
+      var self = this;
+      axios.post(fetch, data).then(function (response) {
+        console.debug(response);
+        if (response, response.data) {
+          self.datas = response.data;
         }
-      ],
-      rows: [
-        {
-          id: 1,
-          user: {
-            username: "dprice0",
-            firstName: "Daniel",
-            lastName: "Price",
-            email: "dprice0@blogs.com"
-          },
-          address: "3 Toban Park",
-          city: "Pocatello",
-          state: "Idaho"
-        }
-      ]
+      }).catch(function (error) {
+        console.error(error);
+      }).finally(function () {
+        vm.set('datas', config.testDatas);
+      }); 
     }
   }
 };
