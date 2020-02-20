@@ -4,7 +4,70 @@ const defaultDatas = {
   rows: []
 }
 
-const testDatas = {
+const data = [
+  {
+    id: 1,
+    user: {
+      username: "dprice0",
+      firstName: "Daniel",
+      lastName: "Price",
+      email: "dprice0@blogs.com"
+    },
+    address: "3 Toban Park",
+    city: "Pocatello",
+    state: "Idaho"
+  },
+  {
+    id: 2,
+    user: {
+      username: "dprice0",
+      firstName: "Daniel",
+      lastName: "Price",
+      email: "dprice0@blogs.com"
+    },
+    address: "3 Toban Park",
+    city: "Pocatello",
+    state: "Idaho"
+  },
+  {
+    id: 3,
+    user: {
+      username: "dprice0",
+      firstName: "Daniel",
+      lastName: "Price",
+      email: "dprice0@blogs.com"
+    },
+    address: "3 Toban Park",
+    city: "Pocatello",
+    state: "Idaho"
+  },
+  {
+    id: 4,
+    user: {
+      username: "dprice0",
+      firstName: "Daniel",
+      lastName: "Price",
+      email: "dprice0@blogs.com"
+    },
+    address: "3 Toban Park",
+    city: "Pocatello",
+    state: "Idaho"
+  },
+  {
+    id: 5,
+    user: {
+      username: "dprice0",
+      firstName: "Daniel",
+      lastName: "Price",
+      email: "dprice0@blogs.com"
+    },
+    address: "3 Toban Park",
+    city: "Pocatello",
+    state: "Idaho"
+  },
+]
+
+const test1Datas = {
   columns: [
     { label: "id", field: "id" },
     {
@@ -21,73 +84,11 @@ const testDatas = {
       interpolate: true
     }
   ],
-  rows: [
-    {
-      id: 1,
-      user: {
-        username: "dprice0",
-        firstName: "Daniel",
-        lastName: "Price",
-        email: "dprice0@blogs.com"
-      },
-      address: "3 Toban Park",
-      city: "Pocatello",
-      state: "Idaho"
-    },
-    {
-      id: 2,
-      user: {
-        username: "dprice0",
-        firstName: "Daniel",
-        lastName: "Price",
-        email: "dprice0@blogs.com"
-      },
-      address: "3 Toban Park",
-      city: "Pocatello",
-      state: "Idaho"
-    },
-    {
-      id: 3,
-      user: {
-        username: "dprice0",
-        firstName: "Daniel",
-        lastName: "Price",
-        email: "dprice0@blogs.com"
-      },
-      address: "3 Toban Park",
-      city: "Pocatello",
-      state: "Idaho"
-    },
-    {
-      id: 4,
-      user: {
-        username: "dprice0",
-        firstName: "Daniel",
-        lastName: "Price",
-        email: "dprice0@blogs.com"
-      },
-      address: "3 Toban Park",
-      city: "Pocatello",
-      state: "Idaho"
-    },
-    {
-      id: 5,
-      user: {
-        username: "dprice0",
-        firstName: "Daniel",
-        lastName: "Price",
-        email: "dprice0@blogs.com"
-      },
-      address: "3 Toban Park",
-      city: "Pocatello",
-      state: "Idaho"
-    },
-  ]
+  rows: data
 };
-
 
 
 export default {
   defaultDatas,
-  testDatas
+  test1Datas,
 };

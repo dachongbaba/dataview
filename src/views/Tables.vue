@@ -6,49 +6,60 @@
 
 <script>
 import config from '../config';
-import Vue from "vue";
-import { VuejsDatatableFactory } from "vuejs-datatable";
+import _ from 'loadsh';
 import axios from 'axios';
-// import loadsh from 'loadsh';
 
-Vue.use(VuejsDatatableFactory);
+import Vue from 'vue';
+import { VuejsDatatableFactory } from 'vuejs-datatable';
+Vue.use( VuejsDatatableFactory );
 
 export default {
   name: "Tables",
+
   data: function () {
     return {
       datas: config.defaultDatas
     }
   },
+
   created() {
-    this.fetch();
+    this.reload();
   },
+
   computed: {
     now() {
       return Date.now()
     }
   },
+
   methods: {
+    reload() {
+      //return _.debounce(this.fetch, 500);
+      this.fetch();
+    },
+
     fetch() {
-      var fetch = '/data/search/m2/v1/aggregation/common';
-      var data = {
-        params: {},
-        tableName: 'o_express',
-        query: '{"bool":{"must":[]}}',
-        page: 1,
-        size: 20,
-        sort: ''
-      }
-      var self = this;
-      axios.post(fetch, data).then(function (response) {
-        console.debug(response);
-        if (response, response.data) {
-          self.datas = response.data;
+      var vm = this;
+      var fetch = {
+        method: 'post',
+        url: '/data/search/m2/v1/aggregation/common',
+        params: {
+          tableName: 'o_express',
+          query: '{"bool":{"must":[]}}',
+        },
+        headers: { 
+          'content-type': 'application/x-www-form-urlencoded'
         }
+      }
+      axios(fetch).then(function (response) {
+        console.debug(fetch, response);
+        var data = _.get(response, 'data.payload.content', []);
+        vm.datas.columns = _.keys(data);
+        vm.datas.rows = data;
       }).catch(function (error) {
-        console.error(error);
+        console.error(fetch, error);
       }).finally(function () {
-        vm.set('datas', config.testDatas);
+        // vm.datas = config.test1Datas;
       }); 
     }
   }
