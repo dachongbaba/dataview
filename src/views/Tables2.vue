@@ -1,6 +1,6 @@
 <template>
   <div class="table-responsive">
-    <datatable class="table table-striped" :columns="columns" :data="datas" />
+    <v-server-table url="/people" :columns="columns" :options="options"/>
   </div>
 </template>
 
@@ -10,13 +10,15 @@ import _ from 'loadsh';
 import axios from 'axios';
 
 import Vue from 'vue';
-import { VuejsDatatableFactory } from 'vuejs-datatable';
-Vue.use( VuejsDatatableFactory );
+import {ServerTable} from 'vue-tables-2';
+Vue.use(ServerTable);
+
 
 export default {
-  name: "Tables",
+  name: "Tables2",
   props: [
     '_fetch',
+    '_options',
     '_columns',
     '_datas',
   ],
@@ -30,17 +32,17 @@ export default {
   },
 
   created() {
-    this.$data.fetch = this.$props._fetch || config.defaultDatas.fetch;
-    this.$data.columns = this.$props._columns || config.defaultDatas.columns;
-    this.$data.datas = this.$props._datas || config.defaultDatas.datas;
-    this.reloadFetch();
+    this.fetch = JSON.parse(this.$props._fetch || JSON.stringify(config.defaultDatas.fetch));
+    this.columns = JSON.parse(this.$props._columns || JSON.stringify(config.defaultDatas.columns));
+    this.datas = this.$props._datas || config.defaultDatas.datas;
+    this.reload();
   },
 
   computed: {
     config() {
       return config
     },
-    reloadFetch() {
+    reload() {
       return _.debounce(this.fetchData, 500);
     },
   },
@@ -48,14 +50,14 @@ export default {
   methods: {
     fetchData() {
       var vm = this;
-      axios(vm.fetch).then(function (response) {
+      var fetch = this.fetch;
+      axios(fetch).then(function (response) {
         console.debug(fetch, response);
-        //vm.datas.columns = _.keys(data);
-        vm.datas = _.get(response, 'data.payload.content', []);
+        vm.datas = _.get(response, fetch.path, []);
       }).catch(function (error) {
         console.error(fetch, error);
       }).finally(function () {
-        // vm.datas = config.test1Datas;
+        console.log('fetch data end');
       }); 
     }
   }

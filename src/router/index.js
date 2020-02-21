@@ -18,9 +18,15 @@ const routes = [
     props: (route) => (route.query)
   },
   {
-    path: '/tables',
-    name: 'tables',
-    component: () => import('../views/Tables.vue'),
+    path: '/tables1',
+    name: 'tables1',
+    component: () => import('../views/Tables1.vue'),
+    props: (route) => (route.query)
+  },
+  {
+    path: '/tables2',
+    name: 'tables2',
+    component: () => import('../views/Tables2.vue'),
     props: (route) => (route.query)
   },
   {

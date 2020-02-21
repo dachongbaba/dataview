@@ -93,8 +93,8 @@ export default {
       var fetch = this.parse(this.fetch);
       var columns = this.parse(this.columns);
       var querys = {
-        fetch: this.json(fetch),
-        columns: this.json(columns)
+        _fetch: this.json(fetch),
+        _columns: this.json(columns)
       };
       this.link = '/#' + this.view + buildUrl({queryParams: querys});
       this.build = {path: this.view, query: querys};
@@ -115,9 +115,7 @@ export default {
       var vm = this;
       var fetch = this.parse(vm.fetch);
       axios(fetch).then(function (response) {
-        var path = 'data.payload.content';
-        var datas = _.get(response, path, []);
-        vm.datas = vm.format(datas);
+        vm.datas = vm.format(_.get(response, fetch.path, []));
       }).catch(function (error) {
         vm.datas = vm.format(error);
       }).finally(function () {

@@ -6,7 +6,8 @@ const defaultDatas = {
 }
 
 const defaultViews = [
-  'tables'
+  'tables1',
+  'tables2',
 ];
 
 const defaultFetch = {
@@ -18,21 +19,11 @@ const defaultFetch = {
   },
   headers: { 
     'content-type': 'application/x-www-form-urlencoded'
-  }
+  },
+  path: 'data.payload.content',
 };
-
-const defaultColumns = [
-  { label: "id", field: "id" },
-  { label: "Title", field: "title"},
-  { label: "Description", field: "desc" },
-  /*{
-    label: "",
-    representedAs: ({ address, city, state }) => `${address}<br />${city}, ${state}`,
-    interpolate: true
-  },*/
-  { label: "Created", field: "ctime"},
-  { label: "Updated", field: "utime"},
-];
+const defaultColumns = ["id", "title", "desc", "ctime", "utime"];
+const defaultOptions = {};
 
 const exampleDatas = [
   {
@@ -100,6 +91,7 @@ const exampleDatas = [
 const test1Datas = {
   fetch: defaultFetch,
   columns: defaultColumns,
+  options: defaultOptions,
   datas: exampleDatas
 };
 
@@ -107,6 +99,7 @@ export default {
   defaultViews,
   defaultFetch,
   defaultColumns,
+  defaultOptions,
   defaultDatas,
   test1Datas,
 };

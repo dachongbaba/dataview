@@ -19,7 +19,10 @@
     "moment": "^2.24.0",
     "stringify-object": "^3.3.0",
     "vue": "^2.6.11",
+    "vue-datatable": "^1.0.4",
     "vue-router": "^3.1.5",
+    "vue-tables-2": "^2.0.0",
+    "vue-tables-3": "^2.0.1-beta05",
     "vuejs-datatable": "^2.0.0-alpha.7",
     "vuex": "^3.1.2"
   },
