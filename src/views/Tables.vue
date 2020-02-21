@@ -37,10 +37,9 @@ export default {
   },
 
   computed: {
-    now() {
-      return Date.now()
+    config() {
+      return config
     },
-    
     reloadFetch() {
       return _.debounce(this.fetchData, 500);
     },
@@ -49,18 +48,7 @@ export default {
   methods: {
     fetchData() {
       var vm = this;
-      var fetch = {
-        method: 'post',
-        url: '/data/search/m2/v1/aggregation/common',
-        params: {
-          tableName: 'o_express',
-          query: '{"bool":{"must":[]}}',
-        },
-        headers: { 
-          'content-type': 'application/x-www-form-urlencoded'
-        }
-      }
-      axios(fetch).then(function (response) {
+      axios(vm.fetch).then(function (response) {
         console.debug(fetch, response);
         //vm.datas.columns = _.keys(data);
         vm.datas = _.get(response, 'data.payload.content', []);

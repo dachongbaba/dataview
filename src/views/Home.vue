@@ -1,16 +1,14 @@
 <template>
   <div class="jumbotron mt-5 mb-5">
-    <data-view></data-view>
+    <router-link to="/views?_title=Tables&_view=tables">Tables</router-link>
   </div>
 </template>
 
 <script>
-import DataView from '@/components/DataView.vue'
 
 export default {
   name: "Home",
   components: {
-    DataView
   }
 };
 </script>

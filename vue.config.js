@@ -5,10 +5,9 @@ module.exports = {
   configureWebpack: {
     plugins: [
       new webpack.ProvidePlugin({
-        $: 'jquery',
         jQuery: 'jquery',
-        'window.jQuery': 'jquery',
-        Popper: ['popper.js', 'default'],
+        Popper: 'popper.js',
+        moment: 'moment'
       }),
     ],
   },

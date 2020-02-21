@@ -5,26 +5,36 @@ const defaultDatas = {
   datas: []
 }
 
-const fetch = {};
-
-const columns = [
-  { label: "id", field: "id" },
-  {
-    label: "Username",
-    field: "user.username",
-    headerClass: "class-in-header second-class"
-  },
-  { label: "First Name", field: "user.firstName" },
-  { label: "Last Name", field: "user.lastName" },
-  { label: "Email", field: "user.email" },
-  {
-    label: "Address",
-    representedAs: ({ address, city, state }) => `${address}<br />${city}, ${state}`,
-    interpolate: true
-  }
+const defaultViews = [
+  'tables'
 ];
 
-const datas = [
+const defaultFetch = {
+  method: 'post',
+  url: '/data/search/m2/v1/aggregation/common',
+  params: {
+    tableName: 'o_express',
+    query: '{"bool":{"must":[]}}',
+  },
+  headers: { 
+    'content-type': 'application/x-www-form-urlencoded'
+  }
+};
+
+const defaultColumns = [
+  { label: "id", field: "id" },
+  { label: "Title", field: "title"},
+  { label: "Description", field: "desc" },
+  /*{
+    label: "",
+    representedAs: ({ address, city, state }) => `${address}<br />${city}, ${state}`,
+    interpolate: true
+  },*/
+  { label: "Created", field: "ctime"},
+  { label: "Updated", field: "utime"},
+];
+
+const exampleDatas = [
   {
     id: 1,
     user: {
@@ -88,12 +98,15 @@ const datas = [
 ];
 
 const test1Datas = {
-  fetch: fetch,
-  columns: columns,
-  datas: datas
+  fetch: defaultFetch,
+  columns: defaultColumns,
+  datas: exampleDatas
 };
 
 export default {
+  defaultViews,
+  defaultFetch,
+  defaultColumns,
   defaultDatas,
   test1Datas,
 };
