@@ -17,8 +17,8 @@ export default {
   name: "Tables1",
   props: [
     '_fetch',
-    '_options',
     '_columns',
+    '_options',
     '_datas',
   ],
 

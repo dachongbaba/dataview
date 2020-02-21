@@ -18,8 +18,8 @@ export default {
   name: "Tables2",
   props: [
     '_fetch',
-    '_options',
     '_columns',
+    '_options',
     '_datas',
   ],
 
