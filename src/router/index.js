@@ -18,10 +18,12 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
+  
   {
     path: '/tables',
     name: 'tables',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Tables.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Tables.vue'),
+    props: (route) => ({ query: route.query.q })
   }
 ]
 

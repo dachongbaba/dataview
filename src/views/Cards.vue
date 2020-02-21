@@ -14,7 +14,7 @@ import { VuejsDatatableFactory } from 'vuejs-datatable';
 Vue.use( VuejsDatatableFactory );
 
 export default {
-  name: "Tables",
+  name: "Cards",
   props: [
     '_fetch',
     '_columns',

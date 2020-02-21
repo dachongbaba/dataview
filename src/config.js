@@ -1,10 +1,30 @@
 // config
 const defaultDatas = {
+  fetch: {},
   columns: [],
-  rows: []
+  datas: []
 }
 
-const data = [
+const fetch = {};
+
+const columns = [
+  { label: "id", field: "id" },
+  {
+    label: "Username",
+    field: "user.username",
+    headerClass: "class-in-header second-class"
+  },
+  { label: "First Name", field: "user.firstName" },
+  { label: "Last Name", field: "user.lastName" },
+  { label: "Email", field: "user.email" },
+  {
+    label: "Address",
+    representedAs: ({ address, city, state }) => `${address}<br />${city}, ${state}`,
+    interpolate: true
+  }
+];
+
+const datas = [
   {
     id: 1,
     user: {
@@ -65,28 +85,13 @@ const data = [
     city: "Pocatello",
     state: "Idaho"
   },
-]
+];
 
 const test1Datas = {
-  columns: [
-    { label: "id", field: "id" },
-    {
-      label: "Username",
-      field: "user.username",
-      headerClass: "class-in-header second-class"
-    },
-    { label: "First Name", field: "user.firstName" },
-    { label: "Last Name", field: "user.lastName" },
-    { label: "Email", field: "user.email" },
-    {
-      label: "Address",
-      representedAs: ({ address, city, state }) => `${address}<br />${city}, ${state}`,
-      interpolate: true
-    }
-  ],
-  rows: data
+  fetch: fetch,
+  columns: columns,
+  datas: datas
 };
-
 
 export default {
   defaultDatas,
