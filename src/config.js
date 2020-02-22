@@ -23,87 +23,16 @@ const defaultFetchs = {
     'env': 'test'
   },
   dataPath: 'payload.content',
-  pagePath: 'payload',
-  querys: {sort: 'sort', page: 'page', perPage: 'size'}
+  pagePath: 'payload.totalElements',
 };
 const defaultColumns = [
-  {title: 'id', field: 'id'}, 
-  {title: 'title', field: 'title'}, 
-  {title: 'desc', field: 'desc'}, 
-  {title: 'ctime', field: 'ctime', callback: 'formatDate|YYYY-MM-DD HH:mm:ss'}, 
-  {title: 'utime', field: 'utime', callback: 'formatDate|YYYY-MM-DD HH:mm:ss'},
+  {title: 'id', field: 'id', label: 'id lable', sortable: true, visible: 'true'}, 
+  {title: 'title', field: 'title', label: 'title lable', sortable: true, visible: 'true'}, 
+  {title: 'desc', field: 'desc', label: 'desc lable', sortable: true, visible: 'true'}, 
+  {title: 'ctime', field: 'ctime', callback: 'formatDate|YYYY-MM-DD HH:mm:ss', sort: true}, 
+  {title: 'utime', field: 'utime', callback: 'formatDate|YYYY-MM-DD HH:mm:ss', sort: true},
 ];
 const defaultOptions = {};
-
-const exampleDatas = [
-  {
-    id: 1,
-    user: {
-      username: "dprice0",
-      firstName: "Daniel",
-      lastName: "Price",
-      email: "dprice0@blogs.com"
-    },
-    address: "3 Toban Park",
-    city: "Pocatello",
-    state: "Idaho"
-  },
-  {
-    id: 2,
-    user: {
-      username: "dprice0",
-      firstName: "Daniel",
-      lastName: "Price",
-      email: "dprice0@blogs.com"
-    },
-    address: "3 Toban Park",
-    city: "Pocatello",
-    state: "Idaho"
-  },
-  {
-    id: 3,
-    user: {
-      username: "dprice0",
-      firstName: "Daniel",
-      lastName: "Price",
-      email: "dprice0@blogs.com"
-    },
-    address: "3 Toban Park",
-    city: "Pocatello",
-    state: "Idaho"
-  },
-  {
-    id: 4,
-    user: {
-      username: "dprice0",
-      firstName: "Daniel",
-      lastName: "Price",
-      email: "dprice0@blogs.com"
-    },
-    address: "3 Toban Park",
-    city: "Pocatello",
-    state: "Idaho"
-  },
-  {
-    id: 5,
-    user: {
-      username: "dprice0",
-      firstName: "Daniel",
-      lastName: "Price",
-      email: "dprice0@blogs.com"
-    },
-    address: "3 Toban Park",
-    city: "Pocatello",
-    state: "Idaho"
-  },
-];
-
-const test1Datas = {
-  fetchs: defaultFetchs,
-  columns: defaultColumns,
-  options: defaultOptions,
-  datas: exampleDatas
-};
 
 export default {
   defaultViews,
@@ -111,5 +40,4 @@ export default {
   defaultColumns,
   defaultOptions,
   defaultDatas,
-  test1Datas,
 };

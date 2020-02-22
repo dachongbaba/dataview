@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import config from '../config1';
+import config from '../config';
 import _ from 'loadsh';
 import axios from 'axios';
 import jsonFormat from 'json-format';

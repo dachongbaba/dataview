@@ -1,20 +1,13 @@
 <template>
-  <div class="table-responsive">
-    <vuetable ref="vuetable" class="table-striped"
-      :fields="columns"
-      :http-fetch="fetchData"
-      :http-options="fetchs"
-      :api-url="fetchs.url"
-      :http-method="fetchs.method"
-      :append-params="fetchs.params"
-      :query-params="fetchs.querys"
-      data-path="datas"
-      pagination-path="pages"
-      @vuetable:pagination-data="onPaginationData">
-    </vuetable>
-    <vuetable-pagination ref="pagination"
-      @vuetable-pagination:change-page="onChangePage">
-    </vuetable-pagination>
+  <div>
+    <code>query: {{ query }}</code>
+    <datatable 
+      :columns="columns"
+      :data="datas"
+      :total="total"
+      :query="query">
+      
+    </datatable>
   </div>
 </template>
 
@@ -22,10 +15,11 @@
 import config from '../config';
 import _ from 'loadsh';
 import axios from 'axios';
-import moment from 'moment'
 
-import Vuetable from 'vuetable-2/src/components/Vuetable'
-import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
+import Vue from 'vue'
+import Datatable from 'vue2-datatable-component'
+
+Vue.use(Datatable)
 
 export default {
   name: "Tables",
@@ -33,7 +27,7 @@ export default {
     '_fetchs',
     '_columns',
     '_options',
-    '_datas',
+    '_querys',
   ],
 
   data: function () {
@@ -42,16 +36,24 @@ export default {
       columns: [],
       options: {},
       datas: [],
+      total: 0,
+      query: {},
     }
   },
 
-  created() {
+  created() { 
     this.fetchs = JSON.parse(this.$props._fetchs || JSON.stringify(config.defaultDatas.fetchs));
     this.columns = JSON.parse(this.$props._columns || JSON.stringify(config.defaultDatas.columns));
     this.options = JSON.parse(this.$props._options || JSON.stringify(config.defaultDatas.options));
-    //this.reload();
   },
-
+  watch: {
+    query: {
+      handler (query) {
+        this.reload(query);
+      },
+      deep: true
+    }
+  },
   computed: {
     config() {
       return config
@@ -62,42 +64,21 @@ export default {
   },
 
   methods: {
-    fetchData() {
-      return axios(this.fetchs);
-    },
-    formatDate(value, fmt = 'YYYY-MM-DD HH:mm:ss') {
-      if (value == null) return ''
-      var date = new Date(value/1);
-      return moment(date).format(fmt)
-    },
-    transform: function(data) {
-      var datas = _.get(data, this.fetchs.dataPath, []);
-      var pages = _.get(data, this.fetchs.pagePath, {});
-      var transformed = {datas: datas};
-      transformed.pages = {
-        total: pages.totalElements,
-        per_page: pages.size,
-        current_page: pages.number,
-        last_page: pages.totalPages,
-        next_page_url: "https://vuetable.ratiw.net/api/users?page=2",
-        prev_page_url: null,
-        from: pages.numberOfElements,
-        to: parseInt(pages.numberOfElements) + datas.length
-      }
-      return transformed;
-    },
-    onPaginationData (paginationData) {
-      this.$refs.pagination.setPaginationData(paginationData)
-    },
-    onChangePage (page) {
-      this.$refs.vuetable.changePage(page)
-    },
-
+    fetchData(query) {
+      var vm = this;
+      var fetchs = this.fetchs;
+      fetchs.params.page = query.offset / query.limit;
+      fetchs.params.sort = `${query.sort},${query.order}`;
+      axios(fetchs).then(function (response) {
+        vm.datas = _.get(response.data, fetchs.dataPath, []);
+        vm.total = _.get(response.data, fetchs.pagePath, 0) * 1;
+        console.log('end');
+      }).catch(function (error) {
+        console.error(fetch, error);
+      }).finally(function () {
+      }); 
+    }
   },
-  components: {
-    Vuetable, 
-    VuetablePagination
-  }
 };
 </script>
 

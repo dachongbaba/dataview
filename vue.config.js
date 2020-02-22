@@ -5,14 +5,15 @@ module.exports = {
   configureWebpack: {
     plugins: [
       new webpack.ProvidePlugin({
+        $: 'jquery',
         jQuery: 'jquery',
-        Popper: 'popper.js',
-        moment: 'moment'
+        'window.jQuery': 'jquery',
+        Popper: ['popper.js', 'default']
       }),
     ],
   },
 
   devServer: {
-    proxy: 'http://docker.meixiu.mobi:58767'
+    proxy: 'https://www.xiaoxiongmeishu.com'
   }
 }
