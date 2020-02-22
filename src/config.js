@@ -19,11 +19,20 @@ const defaultFetchs = {
     query: '{"bool":{"must":[]}}',
   },
   headers: { 
-    'content-type': 'application/x-www-form-urlencoded'
+    'content-type': 'application/x-www-form-urlencoded',
+    'env': 'test'
   },
-  path: 'data.payload.content',
+  dataPath: 'payload.content',
+  pagePath: 'payload',
+  querys: {sort: 'sort', page: 'page', perPage: 'size'}
 };
-const defaultColumns = ["id", "title", "desc", "ctime", "utime"];
+const defaultColumns = [
+  {title: 'id', field: 'id'}, 
+  {title: 'title', field: 'title'}, 
+  {title: 'desc', field: 'desc'}, 
+  {title: 'ctime', field: 'ctime', callback: 'formatDate|YYYY-MM-DD HH:mm:ss'}, 
+  {title: 'utime', field: 'utime', callback: 'formatDate|YYYY-MM-DD HH:mm:ss'},
+];
 const defaultOptions = {};
 
 const exampleDatas = [

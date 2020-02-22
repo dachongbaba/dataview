@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import config from '../config';
+import config from '../config1';
 import _ from 'loadsh';
 import axios from 'axios';
 import jsonFormat from 'json-format';
@@ -126,11 +126,13 @@ export default {
       var vm = this;
       var fetchs = this.parse(vm.fetchs);
       axios(fetchs).then(function (response) {
-        vm.datas = _.get(response, fetchs.path, []);
+        if (response && response.data) {
+          vm.datas = vm.format(response.data);
+        }
       }).catch(function (error) {
         vm.datas = vm.format(error);
       }).finally(function () {
-        vm.datas = vm.format(vm.datas);
+        
       }); 
     }
   }

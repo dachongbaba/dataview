@@ -1,24 +1,19 @@
 <template>
-  <v-client-table v-model="datas" :columns="columns" :options="options"/>
+  <div>
+    <code>query: {{ query }}</code>
+    <datatable v-bind="$data" />
+  </div>
 </template>
 
 <script>
-import config from '../config';
+import config from '../config1';
 import _ from 'loadsh';
 import axios from 'axios';
 
-import Vue from 'vue';
-import {ClientTable} from 'vue-tables-2';
+import Vue from 'vue'
+import Datatable from 'vue2-datatable-component'
 
-const options = {
-  filterable: true,
-  editableColumns: false,
-  pagination: {
-    dropdown: false
-  }
-};
-
-Vue.use(ClientTable, options, false, 'bootstrap4');
+Vue.use(Datatable)
 
 export default {
   name: "Tables1",
@@ -26,7 +21,6 @@ export default {
     '_fetchs',
     '_columns',
     '_options',
-    '_datas',
   ],
 
   data: function () {
@@ -34,7 +28,9 @@ export default {
       fetchs: {},
       columns: [],
       options: {},
-      datas: [],
+      data: [],
+      total: 0,
+      query: {}
     }
   },
 
@@ -42,7 +38,18 @@ export default {
     this.fetchs = JSON.parse(this.$props._fetchs || JSON.stringify(config.defaultDatas.fetchs));
     this.columns = JSON.parse(this.$props._columns || JSON.stringify(config.defaultDatas.columns));
     this.options = JSON.parse(this.$props._options || JSON.stringify(config.defaultDatas.options));
-    this.reload();
+  },
+
+  watch: {
+    query: {
+      handler (query) {
+        this.$router.push({ query })
+      },
+      deep: true
+    },
+    '$route.query' (query) {
+      this.reload(query);
+    }
   },
 
   computed: {
@@ -59,7 +66,9 @@ export default {
       var vm = this;
       var fetchs = this.fetchs;
       axios(fetchs).then(function (response) {
-        vm.datas = _.get(response, fetchs.path, []);
+        vm.data = _.get(response.data, fetchs.dataPath, []);
+        vm.total = _.get(response.date, fetchs.pagePath, []);
+        console.log('end');
       }).catch(function (error) {
         console.error(fetch, error);
       }).finally(function () {
