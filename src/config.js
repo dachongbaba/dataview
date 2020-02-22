@@ -6,11 +6,12 @@ const defaultDatas = {
 }
 
 const defaultViews = [
+  'tables',
   'tables1',
   'tables2',
 ];
 
-const defaultFetch = {
+const defaultFetchs = {
   method: 'post',
   url: '/data/search/m2/v1/aggregation/common',
   params: {
@@ -89,7 +90,7 @@ const exampleDatas = [
 ];
 
 const test1Datas = {
-  fetch: defaultFetch,
+  fetchs: defaultFetchs,
   columns: defaultColumns,
   options: defaultOptions,
   datas: exampleDatas
@@ -97,7 +98,7 @@ const test1Datas = {
 
 export default {
   defaultViews,
-  defaultFetch,
+  defaultFetchs,
   defaultColumns,
   defaultOptions,
   defaultDatas,

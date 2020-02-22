@@ -1,5 +1,14 @@
 <template>
-  <v-client-table v-model="datas" :columns="columns" :options="options"/>
+  <div class="table-responsive">
+    <vuetable 
+      ref="vuetable"
+      data-path=""
+      api-url="https://vuetable.ratiw.net/api/users"
+      pagination-path=""
+      :fields="columns"
+      :data="datas"
+    ></vuetable>
+  </div>
 </template>
 
 <script>
@@ -7,21 +16,10 @@ import config from '../config';
 import _ from 'loadsh';
 import axios from 'axios';
 
-import Vue from 'vue';
-import {ClientTable} from 'vue-tables-2';
-
-const options = {
-  filterable: true,
-  editableColumns: false,
-  pagination: {
-    dropdown: false
-  }
-};
-
-Vue.use(ClientTable, options, false, 'bootstrap4');
+import Vuetable from 'vuetable-2'
 
 export default {
-  name: "Tables1",
+  name: "Tables",
   props: [
     '_fetchs',
     '_columns',
@@ -65,6 +63,9 @@ export default {
       }).finally(function () {
       }); 
     }
+  },
+  components: {
+    Vuetable
   }
 };
 </script>

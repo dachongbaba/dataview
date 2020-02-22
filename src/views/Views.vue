@@ -1,5 +1,5 @@
 <template>
-  <div class="jumbotron mt-5 mb-5">
+  <div class="jumbotron">
     <h1>{{ title }}</h1>
     <p>{{ descs }}</p>
     <form>
@@ -14,8 +14,8 @@
       </div>
 
       <div class="form-group">
-        <label for="fetch">Fetch</label>
-        <textarea id="fetch" v-model="fetch" class="form-control font-weight-bolder" rows="5"></textarea>
+        <label for="fetchs">Fetchs</label>
+        <textarea id="fetchs" v-model="fetchs" class="form-control font-weight-bolder" rows="5"></textarea>
         <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>
       
@@ -25,16 +25,22 @@
         <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>
 
+      <div class="form-group">
+        <label for="options">Options</label>
+        <textarea id="options" v-model="options" class="form-control font-weight-bolder" rows="5"></textarea>
+        <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+      </div>
+
       <div class="form-row justify-content-center">
         <div class="col-auto">
           <button v-on:click="reload" class="btn btn-primary">Load Data</button>
         </div>
         <div class="col-auto">
-          <button v-on:click="router" class="btn btn-primary">Build Link</button>
+          <button v-on:click="build" class="btn btn-primary">Build Link</button>
         </div>
       </div>
       <div class="form-group text-break">
-        <router-link v-if="link" :to="build">{{ link }}</router-link>
+        <router-link v-if="url" :to="path">{{ url }}</router-link>
         <pre class="mt-1 mb-1"><code>{{ datas }}</code></pre>
       </div>
     </form>
@@ -56,25 +62,28 @@ export default {
     '_view',
     '_fetch',
     '_columns',
+    '_options',
   ],
   data() {
     return {
       title: '',
       descs: '',
       view: '',
-      fetch: '',
+      fetchs: '',
       columns: '',
+      options: '',
       datas: '',
-      link: '',
-      build: null,
+      path: '',
+      url: '',
     };
   },
   created() {
     this.title = this.$props._title || this.$data.title;
     this.descs = this.$props._descs || this.$data.descs;
     this.view = this.$props._view || this.$data.view;
-    this.fetch = this.format(this.$props._fetch || config.defaultFetch);
+    this.fetchs = this.format(this.$props._fetch || config.defaultFetchs);
     this.columns = this.format(this.$props._columns || config.defaultColumns);
+    this.options = this.format(this.$props._options || config.defaultOptions);
     console.debug('fetch:', this.fetch, 'columns:', this.columns);
   },
   computed: {
@@ -89,15 +98,17 @@ export default {
     reload() {
       this.reloadFetch();
     },
-    router() {
-      var fetch = this.parse(this.fetch);
+    build() {
+      var fetchs = this.parse(this.fetchs);
       var columns = this.parse(this.columns);
+      var options = this.parse(this.options);
       var querys = {
-        _fetch: this.json(fetch),
-        _columns: this.json(columns)
+        _fetchs: this.json(fetchs),
+        _columns: this.json(columns),
+        _options: this.json(options),
       };
-      this.link = '/#' + this.view + buildUrl({queryParams: querys});
-      this.build = {path: this.view, query: querys};
+      this.url = '/#' + this.view + buildUrl({queryParams: querys});
+      this.path = {path: this.view, query: querys};
     },
     format(input) {
       return jsonFormat(input, {
@@ -113,13 +124,13 @@ export default {
     },
     fetchData() {
       var vm = this;
-      var fetch = this.parse(vm.fetch);
-      axios(fetch).then(function (response) {
-        vm.datas = vm.format(_.get(response, fetch.path, []));
+      var fetchs = this.parse(vm.fetchs);
+      axios(fetchs).then(function (response) {
+        vm.datas = _.get(response, fetchs.path, []);
       }).catch(function (error) {
         vm.datas = vm.format(error);
       }).finally(function () {
-        console.log('fetch data end');
+        vm.datas = vm.format(vm.datas);
       }); 
     }
   }
