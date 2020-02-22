@@ -12,6 +12,8 @@
     "bootstrap": "^4.4.1",
     "build-url": "^2.0.0",
     "core-js": "^3.6.4",
+    "datatables.net": "^1.10.20",
+    "datatables.net-dt": "^1.10.20",
     "font-awesome": "^4.7.0",
     "format": "^0.2.2",
     "jquery": "^3.4.1",

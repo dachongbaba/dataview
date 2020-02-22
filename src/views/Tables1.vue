@@ -1,18 +1,13 @@
 <template>
   <div>
     <code>query: {{ query }}</code>
-    <table ref="table" class="table">
-      <thead>
-          <tr>
-              <th v-for="item in columns" :key="item.field">{{ item.title }}</th>
-          </tr>
-      </thead>
-      <tbody>
-           <tr v-for="row in datas" :key="row.id">
-             <td v-for="col in columns" :key="col.field">{{ row[col.field] }}</td>
-          </tr>
-      </tbody>
-    </table>
+    <datatable 
+      :columns="columns"
+      :data="datas"
+      :total="total"
+      :query="query">
+      
+    </datatable>
   </div>
 </template>
 
@@ -20,8 +15,11 @@
 import config from '../config';
 import _ from 'loadsh';
 import axios from 'axios';
-import 'datatables.net-dt/js/dataTables.dataTables'
-import 'datatables.net-dt/css/jquery.dataTables.css'
+
+import Vue from 'vue'
+import Datatable from 'vue2-datatable-component'
+
+Vue.use(Datatable)
 
 export default {
   name: "Tables",
@@ -47,10 +45,6 @@ export default {
     this.fetchs = JSON.parse(this.$props._fetchs || JSON.stringify(config.defaultDatas.fetchs));
     this.columns = JSON.parse(this.$props._columns || JSON.stringify(config.defaultDatas.columns));
     this.options = JSON.parse(this.$props._options || JSON.stringify(config.defaultDatas.options));
-    this.reload();
-  },
-  mounted() {
-    this.jq(this.$refs.table).DataTable({'serverSide': true, data: this.datas});
   },
   watch: {
     query: {
@@ -61,20 +55,20 @@ export default {
     }
   },
   computed: {
+    config() {
+      return config
+    },
     reload() {
       return _.debounce(this.fetchData, 500);
-    },
-    jq() {
-      return this.jquery || window.jQuery
     },
   },
 
   methods: {
-    fetchData() {
+    fetchData(query) {
       var vm = this;
       var fetchs = this.fetchs;
-      //fetchs.params.page = query.offset / query.limit;
-      //fetchs.params.sort = `${query.sort},${query.order}`;
+      fetchs.params.page = query.offset / query.limit;
+      fetchs.params.sort = `${query.sort},${query.order}`;
       axios(fetchs).then(function (response) {
         vm.datas = _.get(response.data, fetchs.dataPath, []);
         vm.total = _.get(response.data, fetchs.pagePath, 0) * 1;
