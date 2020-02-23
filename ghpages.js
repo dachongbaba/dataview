@@ -9,5 +9,4 @@ ghpages.publish(src, {dest, repo}, (err) => {
     console.error(err);
   }
   console.info('publish end');
-  return next(err);
 });
