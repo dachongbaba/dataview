@@ -1,6 +1,7 @@
 const webpack = require('webpack');
-
+var baseUrl = '';
 module.exports = {
+  publicPath: baseUrl,
   runtimeCompiler: true,
   configureWebpack: {
     plugins: [
