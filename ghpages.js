@@ -8,6 +8,6 @@ ghpages.publish(src, {dest, repo}, (err) => {
   if (err) {
     console.error(err);
   }
-  console.info(src, dest, 'publish end');
+  console.info('publish end');
   return next(err);
 });
