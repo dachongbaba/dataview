@@ -1,6 +1,6 @@
 const ghpages = require('gh-pages');
 
-const repo = process.env.REPO_URL || 'https://newsgitlab.meishubao.com/msb-ai/dv-dataview-h5.git';
+const repo = process.env.REPO_URL || 'https://newsgitlab.meishubao.com/msb-ai/dataview.git';
 const src = 'dist';
 const dest = 'public';
 
