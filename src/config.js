@@ -2,6 +2,7 @@
 const defaultDatas = {
   fetch: {},
   columns: [],
+  options: {},
   datas: []
 }
 
