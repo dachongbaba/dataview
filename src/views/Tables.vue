@@ -1,6 +1,6 @@
 <template>
   <data-table 
-    class="table-hover table-sm" 
+    class="table-hover" 
     :fields="columns" 
     :datas="datas" 
     :index="index"
@@ -74,7 +74,7 @@ export default {
     fetchData() {
       var vm = this;
       var fetchs = this.fetchs;
-      fetchs.params.page = this.page + this.fetchs.pages.index;
+      fetchs.params.page = this.page + fetchs.pages.index;
       fetchs.params.size = this.size;
       axios(fetchs).then(function (response) {
         vm.datas = _.get(response.data, fetchs.paths.dataPath, []);

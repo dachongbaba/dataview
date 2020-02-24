@@ -30,8 +30,8 @@
     <div v-if="total" class="d-flex justify-content-end">
       <div class="align-self-center">
         count: {{datas.length}}, 
-        [ {{ page * this.size + 1 }} - {{ page * this.size + 1 + datas.length }} / {{ count }}], 
-        page: {{ page + index }} / {{ total }}
+        [ {{ page * this.size + 1 }} - {{ page * this.size + datas.length }} / {{ count }}], 
+        page: {{ page + 1 }} / {{ total }}
       </div>
       <div class="p-1"></div>
       <div class="align-self-center">
@@ -133,8 +133,9 @@ export default {
       return data[field.data];
     },
     formatDate(value, fmt = 'YYYY-MM-DD') {
+      value = value/1;
       if (!value) return '';
-      var date = new Date(value/1);
+      var date = new Date(value);
       var text = moment(date).format(fmt);
       return text;
     },

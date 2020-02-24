@@ -125,6 +125,8 @@ export default {
     fetchData() {
       var vm = this;
       var fetchs = this.parse(vm.fetchs);
+      fetchs.params.page = fetchs.pages.page + fetchs.pages.index;
+      fetchs.params.size = fetchs.pages.size;
       axios(fetchs).then(function (response) {
         if (response && response.data) {
           vm.datas = vm.format(response.data);
