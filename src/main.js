@@ -2,26 +2,28 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
 import axios from 'axios'
-import 'bootstrap/dist/js/bootstrap'
+
+import nprogress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+import 'bootstrap/dist/js/bootstrap.bundle.min'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-  NProgress.start()
+  nprogress.start()
   next()
 })
 router.afterEach(() => {
-  NProgress.done()
+  nprogress.done()
 })
 
 axios.interceptors.request.use(
   config => {
-    NProgress.start()
+    nprogress.start()
     return config
   },
   error => {
@@ -31,7 +33,7 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   function(response) {
-    NProgress.done()
+    nprogress.done()
     return response
   },
   function(error) {
