@@ -57,8 +57,8 @@ export default {
     this.columns = JSON.parse(this.$props._columns) || [];
     this.fetchs = JSON.parse(this.$props._fetchs) || {};
 
-    this.page = (this.fetchs.pages.page + this.fetchs.pages.index) || 0;
     this.index = this.fetchs.pages.index || 0;
+    this.page = this.fetchs.pages.page || 0;
     this.size = this.fetchs.pages.size || 20;
 
     this.reload();
@@ -74,12 +74,12 @@ export default {
     fetchData() {
       var vm = this;
       var fetchs = this.fetchs;
-      fetchs.params.page = this.page;
+      fetchs.params.page = this.page + this.fetchs.pages.index;
       fetchs.params.size = this.size;
       axios(fetchs).then(function (response) {
         vm.datas = _.get(response.data, fetchs.paths.dataPath, []);
         vm.error = _.get(response.data, fetchs.paths.errorPath, {});
-        vm.page = _.get(response.data, fetchs.paths.pagePath, 0) * 1;
+        vm.page = _.get(response.data, fetchs.paths.pagePath, 0) * 1 - fetchs.pages.index;
         vm.total = _.get(response.data, fetchs.paths.totalPath, 0) * 1;
         vm.count = _.get(response.data, fetchs.paths.countPath, 0) * 1;
         vm.size = _.get(response.data, fetchs.paths.sizePath, 20) * 1;

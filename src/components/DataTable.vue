@@ -29,18 +29,19 @@
     </div>
     <div v-if="total" class="d-flex justify-content-end">
       <div class="align-self-center">
-        count: {{ (this.page - this.index) * this.size + 1 }} - {{ (this.page - this.index) * this.size + datas.length }} / {{ count }}, 
-        page: {{ page }} / {{ total }}
+        count: {{datas.length}}, 
+        [ {{ page * this.size + 1 }} - {{ page * this.size + 1 + datas.length }} / {{ count }}], 
+        page: {{ page + index }} / {{ total }}
       </div>
       <div class="p-1"></div>
       <div class="align-self-center">
         <ul class="pagination m-0">
-          <li class="page-item" :class="{'disabled': page <= index}">
+          <li class="page-item" :class="{'disabled': page <= 0}">
             <a class="page-link" href="#" v-on:click.stop.prevent="pagePrev">
               <i class="fa fa-chevron-left"/>
             </a>
           </li>
-          <li class="page-item" :class="{'disabled': page >= total}">
+          <li class="page-item" :class="{'disabled': page >= total - 1}">
             <a class="page-link" href="#" v-on:click.stop.prevent="pageNext">
               <i class="fa fa-chevron-right"/>
             </a>
@@ -112,14 +113,14 @@ export default {
   
   methods: {
     pagePrev() {
-      if (this.page <= this.index) {
+      if (this.page <= 0) {
         return;
       }
       var page = this.page - 1;
       this.$emit('update:page', page)
     },
     pageNext() {
-      if (this.page >= this.total) {
+      if (this.page >= this.total - 1) {
         return;
       }
       var page = this.page + 1;
