@@ -33,10 +33,10 @@
 
       <div class="form-row justify-content-center">
         <div class="col-auto">
-          <button v-on:click="reload" class="btn btn-primary">Load Data</button>
+          <button v-on:click.stop.prevent="reload" class="btn btn-primary">Load Data</button>
         </div>
         <div class="col-auto">
-          <button v-on:click="build" class="btn btn-primary">Build Link</button>
+          <button v-on:click.stop.prevent="build" class="btn btn-primary">Build Link</button>
         </div>
       </div>
       <div class="form-group text-break">
