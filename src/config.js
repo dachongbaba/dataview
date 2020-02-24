@@ -8,6 +8,8 @@ const defaultDatas = {
 
 const defaultViews = [
   'tables',
+  'tables1',
+  'tables2',
 ];
 
 const defaultFetchs = {
@@ -21,9 +23,19 @@ const defaultFetchs = {
     'content-type': 'application/x-www-form-urlencoded',
     'env': 'test'
   },
-  dataPath: 'payload.content',
-  pagePath: 'payload.totalElements',
-  errorPath: '',
+  paths: {
+    dataPath: 'payload.content',
+    pagePath: 'payload.number',
+    totalPath: 'payload.totalPages',
+    countPath: 'payload.totalElements',
+    endPath: 'payload.totalElements',
+    errorPath: '',
+  },
+  pages: {
+    index: 1,
+    page: 0,
+    size: 20
+  }
 };
 const defaultColumns = [
   {title: 'Id', data: 'id', sortable: true}, 
