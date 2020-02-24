@@ -13,11 +13,7 @@
     "bootstrap": "^4.4.1",
     "build-url": "^2.0.0",
     "core-js": "^3.6.4",
-    "datatables.net": "^1.10.20",
-    "datatables.net-dt": "^1.10.20",
-    "datatables.net-plugins": "^1.10.20",
     "font-awesome": "^4.7.0",
-    "format": "^0.2.2",
     "jquery": "^3.4.1",
     "json-format": "^1.0.1",
     "loadsh": "0.0.4",
@@ -27,9 +23,6 @@
     "stringify-object": "^3.3.0",
     "vue": "^2.6.11",
     "vue-router": "^3.1.5",
-    "vue-tables-2": "^2.0.0",
-    "vue2-datatable-component": "^2.3.1",
-    "vuetable-2": "^1.7.5",
     "vuex": "^3.1.2"
   },
   "devDependencies": {
