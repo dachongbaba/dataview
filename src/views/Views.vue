@@ -1,49 +1,54 @@
 <template>
   <div class="jumbotron">
-    <h1>{{ title }}</h1>
-    <p>{{ descs }}</p>
-    <form>
-      <div class="form-group">
-        <label for="view">View</label>
-        <select id="view" v-model="view" class="form-control font-weight-bolder">
-          <option v-for="option in config.defaultViews" :key="option" :value="option">
-            {{ option }}
-          </option>
-        </select>
-        <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-      </div>
-
-      <div class="form-group">
-        <label for="fetchs">Fetchs</label>
-        <textarea id="fetchs" v-model="fetchs" class="form-control font-weight-bolder" rows="5"></textarea>
-        <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-      </div>
-      
-      <div class="form-group">
-        <label for="columns">Columns</label>
-        <textarea id="columns" v-model="columns" class="form-control font-weight-bolder" rows="5"></textarea>
-        <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-      </div>
-
-      <div class="form-group">
-        <label for="options">Options</label>
-        <textarea id="options" v-model="options" class="form-control font-weight-bolder" rows="5"></textarea>
-        <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-      </div>
-
-      <div class="form-row justify-content-center">
-        <div class="col-auto">
-          <button v-on:click.stop.prevent="reload" class="btn btn-primary">Load Data</button>
+    <div class="row">
+      <form class="col-12">
+        <h1>{{ title }}</h1>
+        <div class="form-group">
+          <label for="view">View</label>
+          <select id="view" v-model="view" class="form-control font-weight-bolder">
+            <option v-for="option in config.defaultViews" :key="option" :value="option">
+              {{ option }}
+            </option>
+          </select>
+          <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
         </div>
-        <div class="col-auto">
-          <button v-on:click.stop.prevent="build" class="btn btn-primary">Build Link</button>
+
+        <div class="form-group">
+          <label for="fetchs">Fetchs</label>
+          <textarea id="fetchs" v-model="fetchs" class="form-control font-weight-bolder" rows="3"></textarea>
+          <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="columns">Columns</label>
+          <textarea id="columns" v-model="columns" class="form-control font-weight-bolder" rows="3"></textarea>
+          <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="options">Options</label>
+          <textarea id="options" v-model="options" class="form-control font-weight-bolder" rows="3"></textarea>
+          <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+      </form>
+
+      <div class="col-12 text-break">
+        <div class="form-row justify-content-center">
+          <div class="col-auto">
+            <button v-on:click.stop.prevent="reload" class="btn btn-primary">Load Data</button>
+          </div>
+          <div class="col-auto">
+            <button v-on:click.stop.prevent="build" class="btn btn-primary">Build Link</button>
+          </div>
+        </div>
+        <div class="text-break">
+          <router-link v-if="url" :to="path">{{ url }}</router-link>
         </div>
       </div>
-      <div class="form-group text-break">
-        <router-link v-if="url" :to="path">{{ url }}</router-link>
-        <pre class="mt-1 mb-1"><code>{{ datas }}</code></pre>
-      </div>
-    </form>
+    </div>
+    <div>
+      <pre>{{ datas }}</pre>
+    </div>
   </div>
 </template>
 
