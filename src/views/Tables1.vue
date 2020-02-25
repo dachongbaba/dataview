@@ -1,5 +1,6 @@
 <template>
   <div>
+    <data-filter/>
     <data-table 
       class="table-hover" 
       :fields="columns" 
