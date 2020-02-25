@@ -93,8 +93,7 @@ export default {
     }
   },
   components: {
-    DataTable,
-    DataFilter
+    DataTable
   }
 };
 </script>
