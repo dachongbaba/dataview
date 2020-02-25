@@ -2,8 +2,8 @@
   <div class="border rounded-left rounded-right">
     <ul class="nav mt-0 mb-0 align-self-center" style="width:100%;">
       <li v-for="(filter, index) in datas" :key="index" class="nav-item dropdown p-1">
-        <a href="#" data-toggle="dropdown" class="align-self-center btn bg-light"><span class="badge badge-light">{{ filter.label }}</span> {{ filter.value }}</a>
-        <div class="dropdown-menu" :class="{show: filter.show}" style="z-index:1000;">
+        <a href="#" data-toggle="dropdown" class="btn bg-light"><span class="badge badge-light">{{ filter.label }}</span> {{ filter.value }}</a>
+        <div class="dropdown-menu" :class="{show: filter.show}">
           <a class="dropdown-item" href="#"
             v-for="item in filter.items"
             v-on:click.self.prevent="setFilterValue(index, filter, item)"
@@ -17,7 +17,7 @@
         <div class="input-group" data-toggle="dropdown">
           <input type="text" class="form-control border-0" >
         </div>
-        <div class="dropdown-menu" style="z-index:1000;">
+        <div class="dropdown-menu">
           <a class="dropdown-item" href="#"
             v-for="filter in filters" 
             v-on:click.self.prevent="addFilter(filter)"
