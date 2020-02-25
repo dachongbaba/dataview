@@ -1,67 +1,33 @@
 <template>
-  <div class="border">
-    <div class="d-flex justify-content-start flex-nowrap">
-      <ul class="nav d-flex flex-wrap align-self-center" style="width:100%;">
-        <li v-for="(filter, index) in datas" :key="index" class="nav-item dropdown">
-          <div class="d-flex align-self-center flex-nowrap m-1"  data-toggle="dropdown">
-            <span class="align-self-center bg-light pl-2 pr-2">{{ filter.label }}</span>
-            <span class="align-self-center badge badge-secondary">{{ filter.value }}</span>
-          </div>
-          <div class="dropdown-menu" :class="{show: filter.show}" style="z-index:1000;">
-            <a class="dropdown-item" href="#"
-              v-for="item in filter.items"
-              v-on:click.self.prevent="setFilterValue(index, filter, item)"
-              :key="item"
-            >
-              {{ item }}
-            </a>
-          </div>
-        </li>
-        <li class="nav-item dropdown">
-          <input type="text" class="form-control border-0" data-toggle="dropdown" style="width:50px;">
-          <div class="dropdown-menu" style="z-index:1000;">
-            <a class="dropdown-item" href="#"
-              v-for="filter in filters" 
-              v-on:click.self.prevent="addFilter(filter)"
-              :key="filter.label"
-            >
-              {{ filter.label }}
-            </a>
-          </div>
-        </li>
-      </ul>
-        <!--
-        <div v-for="(filter, index) in datas" :key="index" class="input-group" style="width:auto;">
-          <div class="d-flex align-self-center flex-nowrap m-1"  data-toggle="dropdown">
-            <span class="align-self-center bg-light pl-2 pr-2">{{ filter.label }}</span>
-            <span class="align-self-center badge badge-secondary">{{ filter.value }}</span>
-          </div>
-          <div class="dropdown-menu" :class="{show: filter.show}" style="z-index:1000;">
-            <a class="dropdown-item" href="#"
-              v-for="item in filter.items"
-              v-on:click.self.prevent="setFilterValue(index, filter, item)"
-              :key="item"
-            >
-              {{ item }}
-            </a>
-          </div>
+  <div class="border rounded-left rounded-right">
+    <ul class="nav mt-0 mb-0 align-self-center" style="width:100%;">
+      <li v-for="(filter, index) in datas" :key="index" class="nav-item dropdown p-1">
+        <a href="#" data-toggle="dropdown" class="align-self-center btn bg-light"><span class="badge badge-light">{{ filter.label }}</span> {{ filter.value }}</a>
+        <div class="dropdown-menu" :class="{show: filter.show}" style="z-index:1000;">
+          <a class="dropdown-item" href="#"
+            v-for="item in filter.items"
+            v-on:click.self.prevent="setFilterValue(index, filter, item)"
+            :key="item"
+          >
+            {{ item }}
+          </a>
         </div>
-        -->
-        <!--
-        <div class="input-group align-self-center">
-          <input data-toggle="dropdown" style="width:50px;">
-          <div class="dropdown-menu" style="z-index:1000;">
-            <a class="dropdown-item" href="#"
-              v-for="filter in filters" 
-              v-on:click.self.prevent="addFilter(filter)"
-              :key="filter.label"
-            >
-              {{ filter.label }}
-            </a>
-          </div>
+      </li>
+      <li class="nav-item dropdown p-1">
+        <div class="input-group" data-toggle="dropdown">
+          <input type="text" class="form-control border-0" >
         </div>
-        -->
-    </div>
+        <div class="dropdown-menu" style="z-index:1000;">
+          <a class="dropdown-item" href="#"
+            v-for="filter in filters" 
+            v-on:click.self.prevent="addFilter(filter)"
+            :key="filter.label"
+          >
+            {{ filter.label }}
+          </a>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
