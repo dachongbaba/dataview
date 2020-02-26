@@ -110,60 +110,66 @@ function filterFetchData(vm, filter) {
   })
 }
 
+/*
+const filters = [
+  {
+    label: 'lable1',
+    name: 'filter1',
+    items: ['aaaaa', 'bbbbb']
+  },
+  {
+    label: 'lable2',
+    name: 'filter2',
+    items: ['aaaaa', 'bbbbb']
+  },
+  {
+    label: 'lable3',
+    name: 'filter3',
+    fetchs: {
+      method: 'post',
+      url: '/data/search/m2/v1/aggregation/common',
+      params: {
+        tableName: 'o_express',
+        query: '{"bool":{"must":[]}}',
+      },
+      headers: { 
+        'content-type': 'application/x-www-form-urlencoded',
+        'env': 'test'
+      },
+      paths: {
+        data: 'payload.content',
+        title: 'receipt_name',
+        desc: 'city',
+        id: 'id'
+      },
+    },
+    datas: [],
+    q: '',
+  },
+  {
+    label: 'lable4',
+    name: 'filter4',
+    datetime: {
+      type: 'datetime'
+    }
+  },
+];
+*/
+
 export default {
   name: "DataFilter",
   props: {
-    
+    filters: {
+      type: Array,
+      default: function () {
+        return []
+      },
+    }
   },
   data() {
     return {
       value: '',
-      datas: [
-
-      ],
-      filters: [
-        {
-          label: 'lable1',
-          name: 'filter1',
-          items: ['aaaaa', 'bbbbb']
-        },
-        {
-          label: 'lable2',
-          name: 'filter2',
-          items: ['aaaaa', 'bbbbb']
-        },
-        {
-          label: 'lable3',
-          name: 'filter3',
-          fetchs: {
-            method: 'post',
-            url: '/data/search/m2/v1/aggregation/common',
-            params: {
-              tableName: 'o_express',
-              query: '{"bool":{"must":[]}}',
-            },
-            headers: { 
-              'content-type': 'application/x-www-form-urlencoded',
-              'env': 'test'
-            },
-            paths: {
-              data: 'payload.content',
-              title: 'receipt_name',
-              desc: 'city',
-              id: 'id'
-            },
-          },
-          datas: [],
-          q: '',
-        },
-        {
-          label: 'lable4',
-          name: 'filter4',
-          datetime: {
-            type: 'datetime'
-          }
-        },
-      ],
+      datas: [],
    };
   },
   computed: {
@@ -175,6 +181,7 @@ export default {
     }
   },
   created() {
+
   },
 
   methods: {
