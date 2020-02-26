@@ -1,18 +1,33 @@
 <template>
   <div class="border rounded-left rounded-right">
     <ul class="nav mt-0 mb-0 align-self-center" style="width:100%;">
-      <li v-for="(filter, index) in datas" :key="index" class="nav-item dropdown p-1">
-        <a href="#" data-toggle="dropdown" class="btn bg-light"><span class="badge badge-light">{{ filter.label }}</span> {{ filter.value }}</a>
-        <div class="dropdown-menu" :class="{show: filter.show}">
-          <a class="dropdown-item" href="#"
-            v-for="item in filter.items"
-            v-on:click.self.prevent="setFilterValue(index, filter, item)"
-            :key="item"
-          >
-            {{ item }}
+      <template v-for="(filter, index) in datas">
+        <li v-if="filter.datetime" :key="index" class="nav-item p-1">
+          <a class="btn bg-light d-flex">
+            <span class="badge badge-light align-self-center mr-1">{{ filter.label }}</span>
+            <datetime v-model="filter.value" 
+              class="align-self-center" 
+              input-class="border-0"
+              :input-style="{'background-color':'transparent', width:filter.datetime.width||'100px'}"></datetime>
           </a>
-        </div>
-      </li>
+        </li> 
+        <li v-else-if="filter.items" :key="index" class="nav-item dropdown p-1">
+          <a href="#" data-toggle="dropdown" class="btn bg-light"><span class="badge badge-light">{{ filter.label }}</span> {{ filter.value }}</a>
+          <div class="dropdown-menu" :class="{show: filter.show}">
+            <a class="dropdown-item" href="#"
+              v-for="item in filter.items"
+              v-on:click.self.prevent="setFilterValue(index, filter, item)"
+              :key="item"
+            >
+              {{ item }}
+            </a>
+          </div>
+        </li>
+        <li v-else class="nav-item" :key="index">
+          <a href="#" class="btn bg-light"><span class="badge badge-light">{{ filter.label }}</span> {{ filter.value }}</a>
+        </li>
+      </template>
+      
       <li class="nav-item dropdown p-1">
         <div class="input-group" data-toggle="dropdown">
           <input type="text" class="form-control border-0" >
@@ -32,6 +47,10 @@
 </template>
 
 <script>
+
+import { Datetime } from 'vue-datetime';
+import 'vue-datetime/dist/vue-datetime.css';
+
 export default {
   name: "DataFilter",
   props: {
@@ -58,7 +77,7 @@ export default {
         {
           label: 'lable4',
           name: 'filter4',
-          items: ['aaaaa', 'bbbbb']
+          datetime: {}
         },
       ],
       datas: [
@@ -88,6 +107,9 @@ export default {
     removeFilter(index) {
       this.datas.splice(index, 1);
     },
+  },
+  components: {
+    Datetime,
   }
 };
 </script>
