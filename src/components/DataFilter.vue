@@ -2,25 +2,68 @@
   <div class="border rounded-left rounded-right">
     <ul class="nav mt-0 mb-0 align-self-center" style="width:100%;">
       <template v-for="(filter, index) in datas">
-        <li v-if="filter.datetime" :key="index" class="nav-item p-1">
-          <a class="btn bg-light d-flex">
-            <span class="badge badge-light align-self-center mr-1">{{ filter.label }}</span>
-            <datetime v-model="filter.value" 
-              class="align-self-center" 
+        <li v-if="filter.datetime" :key="index" class="nav-item p-1 align-self-center">
+          <a class="btn bg-light d-flex h-100">
+            <span class="align-self-center mr-1">{{ filter.label }}:</span>
+            <datetime 
+              v-model="filter.value" 
+              class="align-self-center mr-1" 
+              :type="filter.datetime.type||'date'"
+              :input-style="{'background-color':'transparent', width:filter.datetime.width||'120px'}"
               input-class="border-0"
-              :input-style="{'background-color':'transparent', width:filter.datetime.width||'100px'}"></datetime>
+            />
+            <span class="align-self-center fa fa-remove p-1" @click.prevent="removeFilter(index)"></span>
           </a>
         </li> 
-        <li v-else-if="filter.items" :key="index" class="nav-item dropdown p-1">
-          <a href="#" data-toggle="dropdown" class="btn bg-light"><span class="badge badge-light">{{ filter.label }}</span> {{ filter.value }}</a>
+
+        <li v-else-if="filter.fetchs" :key="index" class="nav-item dropdown p-1 align-self-center">
+          <a href="#" data-toggle="dropdown" class="btn bg-light d-flex h-100">
+            <span class="align-self-center mr-1">{{ filter.label }}:</span> 
+            <span class="align-self-center mr-1">{{ filter.text }}</span>
+            <span class="align-self-center fa fa-remove p-1" @click.prevent="removeFilter(index)"></span>
+          </a>
+          <div class="dropdown-menu" :class="{show: filter.show}" style="min-width:300px;">
+            <div class="input-group p-3">
+              <input 
+                type="text" 
+                class="form-control"
+                placeholder="Search" 
+                v-model="filter.q" 
+                @keyup.enter="fetchFilter(filter)"
+              >
+            </div>
+            <div style="height:300px; overflow-y:auto;">
+              <a 
+                href="#"
+                class="dropdown-item" 
+                v-for="(item, id) in filter.datas"
+                @click.prevent="setFilterValue(index, filter, item, item[filter.fetchs.paths.title])"
+                :key="id"
+              >
+                <b>{{ item[filter.fetchs.paths.id] }}</b>
+                &nbsp;
+                <b>{{ item[filter.fetchs.paths.title] }}</b>
+                &nbsp;
+                <span>{{ item[filter.fetchs.paths.desc]||'' }}</span>
+              </a>
+            </div>
+          </div>
+        </li>
+
+        <li v-else-if="filter.items" :key="index" class="nav-item dropdown p-1 align-self-center">
+          <a href="#" data-toggle="dropdown" class="btn bg-light d-flex h-100">
+            <span class="align-self-center mr-1">{{ filter.label }}:</span> 
+            <span class="align-self-center mr-1">{{ filter.value }}</span>
+            <span class="align-self-center fa fa-remove p-1" @click.prevent="removeFilter(index)"></span>
+          </a>
           <div class="dropdown-menu" :class="{show: filter.show}">
-            <a class="dropdown-item" href="#"
-              v-for="item in filter.items"
-              v-on:click.self.prevent="setFilterValue(index, filter, item)"
-              :key="item"
-            >
-              {{ item }}
-            </a>
+            <a 
+              href="#"
+              class="dropdown-item" 
+              v-for="(item, id) in filter.items"
+              @click.prevent="setFilterValue(index, filter, item)"
+              :key="id"
+            >{{ item }}</a>
           </div>
         </li>
         <li v-else class="nav-item" :key="index">
@@ -28,18 +71,24 @@
         </li>
       </template>
       
-      <li class="nav-item dropdown p-1">
-        <div class="input-group" data-toggle="dropdown">
-          <input type="text" class="form-control border-0" >
+      <li class="nav-item dropdown flex-grow-1 p-1">
+        <div ref="filterInput" class="input-group" data-toggle="dropdown">
+          <input type="text" class="form-control border-0" @keyup.enter="submitFilter">
         </div>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="#"
-            v-for="filter in filters" 
-            v-on:click.self.prevent="addFilter(filter)"
-            :key="filter.label"
-          >
-            {{ filter.label }}
-          </a>
+          <a 
+            href="#"
+            class="dropdown-item" 
+            @click.prevent="submitFilter"
+          >输入回车或点击搜索</a>
+          <div class="dropdown-divider"></div>
+          <a 
+            href="#"
+            class="dropdown-item" 
+            v-for="(filter, id) in filters" 
+            @click.prevent="addFilter(filter)"
+            :key="id"
+          >{{ filter.label }}</a>
         </div>
       </li>
     </ul>
@@ -47,9 +96,19 @@
 </template>
 
 <script>
-
+import _ from 'loadsh';
+import axios from 'axios';
 import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
+
+function filterFetchData(vm, filter) {
+  filter.fetchs.params.q = filter.q;
+  axios(filter.fetchs).then(function (response) {
+    var path = filter.fetchs.paths.data;
+    var datas = _.get(response.data, path, []);
+    filter.datas = datas;
+  })
+}
 
 export default {
   name: "DataFilter",
@@ -58,6 +117,10 @@ export default {
   },
   data() {
     return {
+      value: '',
+      datas: [
+
+      ],
       filters: [
         {
           label: 'lable1',
@@ -72,7 +135,26 @@ export default {
         {
           label: 'lable3',
           name: 'filter3',
-          items: ['aaaaa', 'bbbbb']
+          fetchs: {
+            method: 'post',
+            url: '/data/search/m2/v1/aggregation/common',
+            params: {
+              tableName: 'o_express',
+              query: '{"bool":{"must":[]}}',
+            },
+            headers: { 
+              'content-type': 'application/x-www-form-urlencoded',
+              'env': 'test'
+            },
+            paths: {
+              data: 'payload.content',
+              title: 'receipt_name',
+              desc: 'city',
+              id: 'id'
+            },
+          },
+          datas: [],
+          q: '',
         },
         {
           label: 'lable4',
@@ -80,19 +162,20 @@ export default {
           datetime: {}
         },
       ],
-      datas: [
-
-      ]
+      
    };
   },
   computed: {
     jq() {
       return window.jQuery;
+    },
+    filterFetchData() {
+      return _.debounce(filterFetchData, 500);
     }
   },
   created() {
   },
-  
+
   methods: {
     addFilter(filter) {
       var item = Object.assign({}, filter, {
@@ -100,12 +183,22 @@ export default {
       });
       this.datas.push(item);
     },
-    setFilterValue(index, filter, value) {
+    setFilterValue(index, filter, value, text = '') {
       this.$set(filter, 'value', value);
+      this.$set(filter, 'text', text);
       this.$set(filter, 'show', false);
     },
     removeFilter(index) {
       this.datas.splice(index, 1);
+    },
+    fetchFilter(filter) {
+      if (filter.fetchs.params.q == filter.q) {
+        return;
+      }
+      return this.filterFetchData(this, filter);
+    },
+    submitFilter() {
+      this.jq(this.$refs.filterInput).click();
     },
   },
   components: {
