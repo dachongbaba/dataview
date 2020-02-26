@@ -1,5 +1,8 @@
 <template>
   <div>
+    <data-filter
+      :filters="options"
+    />
     <data-table 
       class="table-hover" 
       :fields="columns" 
@@ -93,7 +96,8 @@ export default {
     }
   },
   components: {
-    DataTable
+    DataTable,
+    DataFilter
   }
 };
 </script>
