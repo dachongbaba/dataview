@@ -7,11 +7,13 @@
             <span class="align-self-center mr-1">{{ filter.label }}:</span>
             <datetime 
               v-model="filter.value" 
-              class="align-self-center mr-1" 
+              class="align-self-center mr-1"
+              input-class="border-0"
               :type="filter.datetime.type||'date'"
               :input-style="{'background-color':'transparent', width:filter.datetime.width||'120px'}"
-              input-class="border-0"
-            />
+              @close="buildFilter" 
+            >
+            </datetime>
             <span class="align-self-center fa fa-remove p-1" @click.prevent="removeFilter(index)"></span>
           </a>
         </li> 
@@ -102,59 +104,13 @@ import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
 
 function filterFetchData(vm, filter) {
-  filter.fetchs.params.q = filter.q;
+  filter.fetchs.params[filter.fetchs.paths.query] = filter.query;
   axios(filter.fetchs).then(function (response) {
     var path = filter.fetchs.paths.data;
     var datas = _.get(response.data, path, []);
     filter.datas = datas;
   })
 }
-
-/*
-const filters = [
-  {
-    label: 'lable1',
-    name: 'filter1',
-    items: ['aaaaa', 'bbbbb']
-  },
-  {
-    label: 'lable2',
-    name: 'filter2',
-    items: ['aaaaa', 'bbbbb']
-  },
-  {
-    label: 'lable3',
-    name: 'filter3',
-    fetchs: {
-      method: 'post',
-      url: '/data/search/m2/v1/aggregation/common',
-      params: {
-        tableName: 'o_express',
-        query: '{"bool":{"must":[]}}',
-      },
-      headers: { 
-        'content-type': 'application/x-www-form-urlencoded',
-        'env': 'test'
-      },
-      paths: {
-        data: 'payload.content',
-        title: 'receipt_name',
-        desc: 'city',
-        id: 'id'
-      },
-    },
-    datas: [],
-    q: '',
-  },
-  {
-    label: 'lable4',
-    name: 'filter4',
-    datetime: {
-      type: 'datetime'
-    }
-  },
-];
-*/
 
 export default {
   name: "DataFilter",
@@ -170,6 +126,7 @@ export default {
     return {
       value: '',
       datas: [],
+      filter: {},
    };
   },
   computed: {
@@ -196,19 +153,38 @@ export default {
       this.$set(filter, 'value', value);
       this.$set(filter, 'text', text);
       this.$set(filter, 'show', false);
+      this.buildFilter();
     },
     removeFilter(index) {
       this.datas.splice(index, 1);
     },
     fetchFilter(filter) {
-      if (!filter.fetchs || filter.fetchs.params.q == filter.q) {
+      if (!filter.fetchs) {
+        return;
+      }
+
+      if (filter.query != undefined && filter.query == filter.fetchs.params[filter.fetchs.paths.query]) {
         return;
       }
       return this.filterFetchData(this, filter);
     },
     submitFilter() {
       this.jq(this.$refs.filterInput).click();
+      this.buildFilter();
     },
+    buildFilter() {
+      var filter = {};
+      for (var i = 0; i < this.datas.length; i++) {
+        var item = this.datas[i];
+        if (typeof item.value == 'object') {
+          filter[item.name] = item.value.id;
+        } else {
+          filter[item.name] = item.value;
+        }
+        
+      }
+      this.$emit('update:filter', filter)
+    }
   },
   components: {
     Datetime,

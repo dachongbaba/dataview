@@ -68,14 +68,14 @@ const defaultOptions = [
         'env': 'test'
       },
       paths: {
+        query: 'q',
         data: 'payload.content',
         title: 'receipt_name',
         desc: 'city',
         id: 'id'
       },
     },
-    datas: [],
-    q: '',
+    datas: []
   },
   {
     label: 'lable4',

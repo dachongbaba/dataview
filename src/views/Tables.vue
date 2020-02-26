@@ -1,8 +1,6 @@
 <template>
   <div>
-    <data-filter
-      :filters="options"
-    />
+    <data-filter :filters="options" :filter.sync="filter"/>
     <data-table 
       class="table-hover" 
       :fields="columns" 
@@ -41,6 +39,7 @@ export default {
       size: 0,
       total: 0,
       count: 0,
+      filter: {}
     }
   },
   watch: {
@@ -51,6 +50,12 @@ export default {
       deep: true
     },
     size: {
+      handler () {
+        this.reload();
+      },
+      deep: true
+    },
+    filter: {
       handler () {
         this.reload();
       },
