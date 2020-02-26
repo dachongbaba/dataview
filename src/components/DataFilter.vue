@@ -159,10 +159,11 @@ export default {
         {
           label: 'lable4',
           name: 'filter4',
-          datetime: {}
+          datetime: {
+            type: 'datetime'
+          }
         },
       ],
-      
    };
   },
   computed: {
@@ -181,6 +182,7 @@ export default {
       var item = Object.assign({}, filter, {
         show: true
       });
+      this.fetchFilter(item);
       this.datas.push(item);
     },
     setFilterValue(index, filter, value, text = '') {
@@ -192,7 +194,7 @@ export default {
       this.datas.splice(index, 1);
     },
     fetchFilter(filter) {
-      if (filter.fetchs.params.q == filter.q) {
+      if (!filter.fetchs || filter.fetchs.params.q == filter.q) {
         return;
       }
       return this.filterFetchData(this, filter);
