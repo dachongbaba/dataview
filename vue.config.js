@@ -6,10 +6,16 @@ module.exports = {
   publicPath: baseUrl,
   runtimeCompiler: true,
   configureWebpack: {
-    output: {
-      filename: 'js/[name].[hash:10].js',
-      chunkFilename: 'js/[name].[chunkhash:10].js'
+    externals: {
+      
     },
+    output:
+      NODE_ENV !== 'development'
+        ? {
+          filename: 'js/[name].[hash:10].js',
+          chunkFilename: 'js/[name].[chunkhash:10].js'
+        }
+        : {},
     optimization: {
       splitChunks: {
         minSize: 10000,
