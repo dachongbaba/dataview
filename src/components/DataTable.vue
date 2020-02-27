@@ -29,9 +29,8 @@
     </div>
     <div v-if="total" class="d-flex justify-content-end">
       <div class="align-self-center">
-        count: {{datas.length}}, 
-        [ {{ page * this.size + 1 }} - {{ page * this.size + datas.length }} / {{ count }}], 
-        page: {{ page + 1 }} / {{ total }}
+        page: {{ page + 1 }} / {{ total }},
+        count: {{ page * this.size + 1 }} - {{ page * this.size + datas.length }} / {{ count }}
       </div>
       <div class="p-1"></div>
       <div class="align-self-center">
