@@ -11,9 +11,7 @@
               input-class="border-0"
               :type="filter.datetime.type||'date'"
               :input-style="{'background-color':'transparent', width:filter.datetime.width||'120px'}"
-              @close="buildFilter" 
-            >
-            </datetime>
+            />
             <span class="align-self-center fa fa-remove p-1" @click.prevent="removeFilter(index)"></span>
           </a>
         </li> 
@@ -82,7 +80,7 @@
             href="#"
             class="dropdown-item" 
             @click.prevent="submitFilter"
-          >输入回车或点击搜索</a>
+          ><i class="fa fa-search"/> 输入回车或点击搜索</a>
           <div class="dropdown-divider"></div>
           <a 
             href="#"
@@ -90,7 +88,7 @@
             v-for="(filter, id) in options" 
             @click.prevent="addFilter(filter)"
             :key="id"
-          >{{ filter.label }}</a>
+          ><i v-if="filter.fa" class="fa" :class="filter.fa"/> {{ filter.label }}</a>
         </div>
       </li>
     </ul>
@@ -158,7 +156,6 @@ export default {
       this.$set(filter, 'value', value);
       this.$set(filter, 'text', text);
       this.$set(filter, 'show', false);
-      this.buildFilter();
     },
     removeFilter(index) {
       this.datas.splice(index, 1);
