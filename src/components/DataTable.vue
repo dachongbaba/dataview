@@ -56,7 +56,8 @@ import _ from 'loadsh';
 import axios from 'axios';
 import moment from 'moment';
 
-function fetchData(vm, fetchs) {
+function fetchData(vm, fetchs, filters) {
+  fetchs.data = filters;
   fetchs.params.page = this.page + fetchs.pages.index;
   fetchs.params.size = this.size;
   axios(fetchs).then(function (response) {
@@ -109,7 +110,7 @@ export default {
   watch: {
     filters: {
       handler () {
-        this.page = this.fetchs.pages.page || 0;
+        this.fetchData();
       },
       deep: true
     }
@@ -146,6 +147,10 @@ export default {
   methods: {
     fetchData() {
       return this.fetch(this, this.fetchs, this.filters);
+    },
+    resetPage() {
+        this.page = this.fetchs.pages.page || 0;
+        this.fetchData();
     },
     pagePrev() {
       if (this.page <= 0) {
