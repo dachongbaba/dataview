@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
-import store from './store'
+import router from '../../router'
+import store from '../../store'
 import axios from 'axios'
 
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'font-awesome/css/font-awesome.min.css';
 
 Vue.config.productionTip = false
 

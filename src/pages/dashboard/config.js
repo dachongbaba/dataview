@@ -7,9 +7,9 @@ const defaultDatas = {
 }
 
 const defaultViews = [
-  'table',
-  'card',
-  'list',
+  'tables',
+  'tables1',
+  'tables2',
 ];
 
 const defaultFetchs = {
