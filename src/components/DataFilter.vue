@@ -87,7 +87,7 @@
           <a 
             href="#"
             class="dropdown-item" 
-            v-for="(filter, id) in filters" 
+            v-for="(filter, id) in options" 
             @click.prevent="addFilter(filter)"
             :key="id"
           >{{ filter.label }}</a>
@@ -103,7 +103,7 @@ import axios from 'axios';
 import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
 
-function filterFetchData(vm, filter) {
+function fetchData(vm, filter) {
   filter.fetchs.params[filter.fetchs.paths.query] = filter.query;
   axios(filter.fetchs).then(function (response) {
     var path = filter.fetchs.paths.data;
@@ -115,7 +115,7 @@ function filterFetchData(vm, filter) {
 export default {
   name: "DataFilter",
   props: {
-    filters: {
+    options: {
       type: Array,
       default: function () {
         return []
@@ -124,24 +124,29 @@ export default {
   },
   data() {
     return {
-      value: '',
       datas: [],
-      filter: {},
+      value: ''
    };
   },
-  computed: {
-    jq() {
-      return window.jQuery;
-    },
-    filterFetchData() {
-      return _.debounce(filterFetchData, 500);
-    }
-  },
+  
   created() {
 
   },
 
+  computed: {
+    jq() {
+      return window.jQuery;
+    },
+    fetch() {
+      return _.debounce(fetchData, 500);
+    }
+  },
+
   methods: {
+    fetchData(filter) {
+      return this.fetch(this, filter);
+    },
+
     addFilter(filter) {
       var item = Object.assign({}, filter, {
         show: true
@@ -162,28 +167,27 @@ export default {
       if (!filter.fetchs) {
         return;
       }
-
       if (filter.query != undefined && filter.query == filter.fetchs.params[filter.fetchs.paths.query]) {
         return;
       }
-      return this.filterFetchData(this, filter);
+      return this.fetchData(filter);
     },
     submitFilter() {
       this.jq(this.$refs.filterInput).click();
       this.buildFilter();
     },
     buildFilter() {
-      var filter = {};
+      var filters = {};
       for (var i = 0; i < this.datas.length; i++) {
         var item = this.datas[i];
         if (typeof item.value == 'object') {
-          filter[item.name] = item.value.id;
+          filters[item.name] = item.value.id;
         } else {
-          filter[item.name] = item.value;
+          filters[item.name] = item.value;
         }
         
       }
-      this.$emit('update:filter', filter)
+      this.$emit('update:filters', filters)
     }
   },
   components: {

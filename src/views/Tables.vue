@@ -1,15 +1,14 @@
 <template>
   <div>
-    <data-filter :filters="options" :filter.sync="filter"/>
+    <data-filter 
+      :options="options" 
+      :filters.sync="filters"
+    />
     <data-table 
-      class="table-hover" 
       :fields="columns" 
-      :datas="datas" 
-      :index="index"
-      :page.sync="page"
-      :size.sync="size"
-      :total="total"
-      :count="count"
+      :fetchs="fetchs"
+      :filters="filters" 
+      :datas.sync="datas"
     />
   </div>
 </template>
@@ -22,44 +21,20 @@ import DataFilter from '../components/DataFilter';
 
 export default {
   name: "Tables",
+
   props: [
     '_options',
     '_columns',
     '_fetchs',
-    '_querys',
   ],
+
   data: function () {
     return {
       options: {},
       columns: [],
       fetchs: {},
-      datas: [],
-      page: 0,
-      index: 0,
-      size: 0,
-      total: 0,
-      count: 0,
-      filter: {}
-    }
-  },
-  watch: {
-    page: {
-      handler () {
-        this.reload();
-      },
-      deep: true
-    },
-    size: {
-      handler () {
-        this.reload();
-      },
-      deep: true
-    },
-    filter: {
-      handler () {
-        this.reload();
-      },
-      deep: true
+      filters: {},
+      datas: {},
     }
   },
 
@@ -67,39 +42,14 @@ export default {
     this.options = JSON.parse(this.$props._options) || {};
     this.columns = JSON.parse(this.$props._columns) || [];
     this.fetchs = JSON.parse(this.$props._fetchs) || {};
-
-    this.index = this.fetchs.pages.index || 0;
-    this.page = this.fetchs.pages.page || 0;
-    this.size = this.fetchs.pages.size || 20;
-
-    this.reload();
   },
 
   computed: {
-    reload() {
-      return _.debounce(this.fetchData, 500);
-    }
   },
 
   methods: {
-    fetchData() {
-      var vm = this;
-      var fetchs = this.fetchs;
-      fetchs.params.page = this.page + fetchs.pages.index;
-      fetchs.params.size = this.size;
-      axios(fetchs).then(function (response) {
-        vm.datas = _.get(response.data, fetchs.paths.dataPath, []);
-        vm.error = _.get(response.data, fetchs.paths.errorPath, {});
-        vm.page = _.get(response.data, fetchs.paths.pagePath, 0) * 1 - fetchs.pages.index;
-        vm.total = _.get(response.data, fetchs.paths.totalPath, 0) * 1;
-        vm.count = _.get(response.data, fetchs.paths.countPath, 0) * 1;
-        vm.size = _.get(response.data, fetchs.paths.sizePath, 20) * 1;
-      }).catch(function (error) {
-        console.error(fetch, error);
-      }).finally(function () {
-      });
-    }
   },
+
   components: {
     DataTable,
     DataFilter

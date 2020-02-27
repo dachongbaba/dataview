@@ -39,8 +39,8 @@ const defaultFetchs = {
 };
 const defaultColumns = [
   {title: 'Id', data: 'id', sortable: true}, 
-  {title: 'Ctime', data: 'ctime', render: 'formatDate|YYYY-MM-DD HH:mm:ss'}, 
-  {title: 'Utime', data: 'utime', render: 'formatDate|YYYY-MM-DD HH:mm:ss'},
+  {title: 'Ctime', data: 'ctime', format: 'formatDate|YYYY-MM-DD HH:mm:ss'}, 
+  {title: 'Utime', data: 'utime', format: 'formatDate|YYYY-MM-DD HH:mm:ss'},
 ];
 const defaultOptions = [
   {

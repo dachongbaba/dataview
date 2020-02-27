@@ -21,7 +21,7 @@
               v-for="(field, col) in fields" 
               :key="col"
             >
-              {{ renderCell(data, field) }}
+              {{ format(data, field) }}
             </td>
           </tr>
         </tbody>
@@ -53,7 +53,24 @@
 </template>
 
 <script>
+import _ from 'loadsh';
+import axios from 'axios';
 import moment from 'moment';
+
+function fetchData(vm, fetchs) {
+  fetchs.params.page = this.page + fetchs.pages.index;
+  fetchs.params.size = this.size;
+  axios(fetchs).then(function (response) {
+    vm.datas = _.get(response.data, fetchs.paths.dataPath, []);
+    vm.page = _.get(response.data, fetchs.paths.pagePath, 0) * 1 - fetchs.pages.index;
+    vm.total = _.get(response.data, fetchs.paths.totalPath, 0) * 1;
+    vm.count = _.get(response.data, fetchs.paths.countPath, 0) * 1;
+    vm.size = _.get(response.data, fetchs.paths.sizePath, 20) * 1;
+  }).catch(function (error) {
+    console.error(fetch, error);
+  }).finally(function () {
+  });
+}
 
 export default {
   name: "DataTable",
@@ -64,71 +81,90 @@ export default {
         return []
       },
     },
-    datas: {
-      type: Array,
+    fetchs: {
+      type: Object,
       default: function () {
-        return []
+        return {}
       },
     },
-    index: {
-      type: Number,
-      default: 0,
-    },
-    page: {
-      type: Number,
-      default: 0,
-    },
-    total: {
-      type: Number,
-      default: 0,
-    },
-    count: {
-      type: Number,
-      default: 0,
-    },
-    size: {
-      type: Number,
-      default: 20,
-    },
+    filters: {
+      type: Object,
+      default: function () {
+        return {}
+      },
+    }
   },
+
   data() {
-   return {
-     
-   };
+    return {
+      datas: this.fetchs.datas,
+      index: 0,
+      page: 0,
+      size: 20,
+      total: 0,
+      count: 0,
+      length: 0,
+    };
+  },
+
+  watch: {
+    filters: {
+      handler () {
+        this.page = this.fetchs.pages.page || 0;
+      },
+      deep: true
+    }
   },
 
   created() {
+    this.index = this.fetchs.pages.page || this.index;
+    this.page = this.fetchs.pages.page || this.page;
+    this.size = this.fetchs.pages.size || this.size;
+
     var self = this;
     this.fields.map((field) => {
-      if (field.render) {
-        var params = field.render.split('|');
+      if (field.format) {
+        var params = field.format.split('|');
         var render = self[params[0]];
-        field.render = (value) => {
+        field.format = (value) => {
           params[0] = value;
           return render.apply(self, params);
         };
       }
     })
+    this.fetchData(this, this.fetchs);
+  },
+
+  computed: {
+    jq() {
+      return window.jQuery;
+    },
+    fetch() {
+      return _.debounce(fetchData, 500);
+    }
   },
   
   methods: {
+    fetchData() {
+      return this.fetch(this, this.fetchs, this.filters);
+    },
     pagePrev() {
       if (this.page <= 0) {
         return;
       }
-      var page = this.page - 1;
-      this.$emit('update:page', page)
+      this.page -= 1;
+      this.fetchData();
     },
     pageNext() {
       if (this.page >= this.total - 1) {
         return;
       }
-      var page = this.page + 1;
-      this.$emit('update:page', page)
+      this.page += 1;
+      this.fetchData()
     },
-    renderCell(data, field) {
-      if (field.render) {
-        return field.render(data[field.data]);
+    format(data, field) {
+      if (field.format) {
+        return field.format(data[field.data]);
       }
       return data[field.data];
     },
