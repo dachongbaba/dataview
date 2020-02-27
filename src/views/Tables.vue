@@ -19,7 +19,6 @@ import DataFilter from '../components/DataFilter';
 
 export default {
   name: "Tables",
-
   props: [
     '_options',
     '_columns',
