@@ -14,8 +14,6 @@
 </template>
 
 <script>
-import _ from 'loadsh';
-import axios from 'axios';
 import DataTable from '../components/DataTable';
 import DataFilter from '../components/DataFilter';
 
