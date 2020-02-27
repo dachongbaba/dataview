@@ -41,12 +41,6 @@ export default {
     this.fetchs = JSON.parse(this.$props._fetchs) || {};
   },
 
-  computed: {
-  },
-
-  methods: {
-  },
-
   components: {
     DataTable,
     DataFilter
