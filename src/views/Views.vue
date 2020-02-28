@@ -36,10 +36,10 @@
       <div class="col-12 text-break">
         <div class="form-row justify-content-center">
           <div class="col-auto">
-            <button v-on:click.stop.prevent="fetch" class="btn btn-primary">Load Data</button>
+            <button v-on:click.stop.prevent="fetchData" class="btn btn-primary">Load Data</button>
           </div>
           <div class="col-auto">
-            <button v-on:click.stop.prevent="build" class="btn btn-primary">Build Link</button>
+            <button v-on:click.stop.prevent="buildData" class="btn btn-primary">Build Link</button>
           </div>
         </div>
         <div class="text-break">
@@ -60,6 +60,19 @@ import buildUrl from 'build-url';
 import jsonFormat from 'json-format';
 import config from '../config';
 
+function fetchData(vm) {
+  var fetchs = JSON.parse(vm.fetchs);
+  fetchs.params.page = fetchs.pages.page + fetchs.pages.index;
+  fetchs.params.size = fetchs.pages.size;
+  axios(fetchs).then(function (response) {
+    if (response && response.data) {
+      vm.datas = vm.format(response.data);
+    }
+  }).catch(function (error) {
+    vm.datas = vm.format(error);
+  });
+}
+
 export default {
   name: "Views",
   props: [
@@ -75,7 +88,7 @@ export default {
     return {
       config: {},
       title: '',
-      descs: '',
+      desc: '',
       view: '',
       fetchs: '',
       columns: '',
@@ -85,77 +98,61 @@ export default {
       url: '',
     };
   },
-  created() {
-    this.loadConfig();
-    this.fetchs = this.format(this.$props._fetchs || this.config.fetchs);
-    this.columns = this.format(this.$props._columns || this.config.columns);
-    this.options = this.format(this.$props._options || this.config.options);
-    this.datas = this.format(this.$props._options || this.config.datas);
+  async created() {
+    if (this._config) {
+      let res = await axios.get(this._config);
+      this.config = res.data;
+    } else {
+      this.config = config;
+    }
     this.title = this.$props._title || this.config.title || '';
     this.desc = this.$props.desc || this.config.desc || '';
     this.view = this.$props._view || this.config.view || '';
+    this.fetchs = this.format(this.$props._fetchs || this.config.fetchs || {});
+    this.columns = this.format(this.$props._columns || this.config.columns || []);
+    this.options = this.format(this.$props._options || this.config.options || []);
+    this.datas = this.format(this.$props._options || this.config.datas || null);
   },
   computed: {
     jq() {
       return window.jQuery;
     },
     fetch() {
-      return _.debounce(this.fetchData, 500);
+      return _.debounce(fetchData, 500);
     }
   },
   methods: {
-    async loadConfig() {
-      var vm = this;
-      if (this._config) {
-        const response = await axios.get(this._config);
-        response.then((response)=> vm.config = response.data);
-      } else {
-        this.config = config;
+    async loadConfig(url) {
+      if (url) {
+        let res = await axios.get(url);
+        return res.data;
       } 
+      return config;
     },
     fetchData() {
-      var vm = this;
-      var fetchs = this.parse(vm.fetchs);
-      fetchs.params.page = fetchs.pages.page + fetchs.pages.index;
-      fetchs.params.size = fetchs.pages.size;
-      axios(fetchs).then(function (response) {
-        if (response && response.data) {
-          vm.datas = vm.format(response.data);
-        }
-      }).catch(function (error) {
-        vm.datas = vm.format(error);
-      }).finally(function () {
-        
-      }); 
+      return this.fetch(this);
     },
-    
+    buildData() {
+      var fetchs = JSON.parse(this.fetchs);
+      var columns = JSON.parse(this.columns);
+      var options = JSON.parse(this.options);
+      var querys = {
+        _fetchs: JSON.stringify(fetchs),
+        _columns: JSON.stringify(columns),
+        _options: JSON.stringify(options),
+      };
+      this.url = '/#' + this.view + buildUrl({queryParams: querys});
+      this.path = {path: this.view, query: querys};
+    },
     format(input) {
       if (!input) {
         return "";
       }
       if (input == 'string') {
-        input = this.parse(input)
+        input = JSON.parse(input)
       }
       return jsonFormat(input, {type: 'space', size: 2});
-    },
-    json(value) {
-      return JSON.stringify(value);
-    },
-    parse(value) {
-      return JSON.parse(value);
-    },
-    build() {
-      var fetchs = this.parse(this.fetchs);
-      var columns = this.parse(this.columns);
-      var options = this.parse(this.options);
-      var querys = {
-        _fetchs: this.json(fetchs),
-        _columns: this.json(columns),
-        _options: this.json(options),
-      };
-      this.url = '/#' + this.view + buildUrl({queryParams: querys});
-      this.path = {path: this.view, query: querys};
-    },
+    }
   }
 };
 </script>
