@@ -65,8 +65,10 @@ const defaultOptions = [
       paths: {
         query: 'query',
         data: 'payload.content',
-        title: 'receipt_name',
-        desc: 'city',
+        label: 'username',
+        title: 'user_num',
+        desc: ['username'],
+        icon: 'head',
         id: 'id'
       },
     },

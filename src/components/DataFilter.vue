@@ -28,7 +28,7 @@
                 type="text" 
                 class="form-control"
                 placeholder="Search" 
-                v-model="filter.q" 
+                v-model="filter.query" 
                 @keyup.enter="fetchFilter(filter)"
               >
             </div>
@@ -37,14 +37,19 @@
                 href="#"
                 class="dropdown-item" 
                 v-for="(item, id) in filter.datas"
-                @click.prevent="setFilterValue(index, filter, item, item[filter.fetchs.paths.title])"
+                @click.prevent="setFilterValue(index, filter, item, item[filter.fetchs.paths.label||filter.fetchs.paths.title||filter.fetchs.paths.title.id])"
                 :key="id"
               >
-                <b>{{ item[filter.fetchs.paths.id] }}</b>
-                &nbsp;
-                <b>{{ item[filter.fetchs.paths.title] }}</b>
-                &nbsp;
-                <span>{{ item[filter.fetchs.paths.desc]||'' }}</span>
+                <img 
+                  v-if="filter.fetchs.paths.icon" 
+                  :src="item[filter.fetchs.paths.icon]" 
+                  class="img-thumbnail rounded-circle mr-1" 
+                  width="25"
+                />
+                <b class="p-1">{{ item[filter.fetchs.paths.title||filter.fetchs.paths.label||filter.fetchs.paths.id] }}</b>
+                <template v-for="(key, i) in filter.fetchs.paths.desc">
+                  <span :key="i" class="p-1">{{ item[key] }}</span>
+                </template>
               </a>
             </div>
           </div>
@@ -102,7 +107,7 @@ import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
 
 function fetchData(vm, filter) {
-  filter.fetchs.params[filter.fetchs.paths.query] = filter.query;
+  filter.fetchs.params[filter.fetchs.paths.query] = filter.query || '';
   axios(filter.fetchs).then(function (response) {
     var path = filter.fetchs.paths.data;
     var datas = _.get(response.data, path, []);
@@ -153,9 +158,9 @@ export default {
       this.datas.push(item);
     },
     setFilterValue(index, filter, value, text = '') {
+      this.$set(filter, 'show', false);
       this.$set(filter, 'value', value);
       this.$set(filter, 'text', text);
-      this.$set(filter, 'show', false);
     },
     removeFilter(index) {
       this.datas.splice(index, 1);
