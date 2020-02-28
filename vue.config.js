@@ -27,6 +27,7 @@ module.exports = {
         $: 'jquery/dist/jquery.min',
         jQuery: 'jquery/dist/jquery.min',
         'window.jQuery': 'jquery/dist/jquery.min',
+        requirejs: 'requirejs.min',
       }),
     ],
   },

@@ -1,10 +1,5 @@
 // config
-const defaultDatas = {
-  fetch: {},
-  columns: [],
-  options: {},
-  datas: []
-}
+
 
 const defaultViews = [
   'table',
@@ -58,17 +53,17 @@ const defaultOptions = [
     name: 'filter3',
     fetchs: {
       method: 'post',
-      url: '/data/search/m2/v1/aggregation/common',
+      url: '/data/search/m1/v1/search/common',
       params: {
-        tableName: 'o_express',
-        query: '{"bool":{"must":[]}}',
+        tableName: 'u_user',
+        query: '',
       },
       headers: { 
         'content-type': 'application/x-www-form-urlencoded',
         'env': 'test'
       },
       paths: {
-        query: 'q',
+        query: 'query',
         data: 'payload.content',
         title: 'receipt_name',
         desc: 'city',
@@ -86,10 +81,12 @@ const defaultOptions = [
   },
 ];
 
+const defaultDatas = null;
+
 export default {
-  defaultViews,
-  defaultFetchs,
-  defaultColumns,
-  defaultOptions,
-  defaultDatas,
+  views: defaultViews,
+  fetchs: defaultFetchs,
+  columns: defaultColumns,
+  options: defaultOptions,
+  datas: defaultDatas,
 };

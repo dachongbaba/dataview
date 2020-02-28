@@ -2,15 +2,16 @@
   <div class="jumbotron">
     <div class="row">
       <form class="col-12">
-        <h1>{{ title }}</h1>
+        <h1 v-if="title" class="display-4">{{ title }}</h1>
+        <p v-if="desc">{{ desc }}</p>
         <div class="form-group">
           <label for="view">View</label>
           <select id="view" v-model="view" class="form-control font-weight-bolder">
-            <option v-for="option in config.defaultViews" :key="option" :value="option">
+            <option v-for="option in config.views" :key="option" :value="option">
               {{ option }}
             </option>
           </select>
-          <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          <small id="viewHelp" class="form-text text-muted"></small>
         </div>
 
         <div class="form-group">
@@ -35,7 +36,7 @@
       <div class="col-12 text-break">
         <div class="form-row justify-content-center">
           <div class="col-auto">
-            <button v-on:click.stop.prevent="reload" class="btn btn-primary">Load Data</button>
+            <button v-on:click.stop.prevent="fetch" class="btn btn-primary">Load Data</button>
           </div>
           <div class="col-auto">
             <button v-on:click.stop.prevent="build" class="btn btn-primary">Build Link</button>
@@ -53,24 +54,26 @@
 </template>
 
 <script>
-import config from '../config';
 import _ from 'loadsh';
 import axios from 'axios';
-import jsonFormat from 'json-format';
 import buildUrl from 'build-url';
+import jsonFormat from 'json-format';
+import config from '../config';
 
 export default {
   name: "Views",
   props: [
-    '_title',
-    '_descs',
-    '_view',
-    '_fetch',
+    '_config',
+    '_fetchs',
     '_columns',
     '_options',
+    '_title',
+    '_desc',
+    '_view',
   ],
   data() {
     return {
+      config: {},
       title: '',
       descs: '',
       view: '',
@@ -83,49 +86,32 @@ export default {
     };
   },
   created() {
-    this.title = this.$props._title || this.$data.title;
-    this.descs = this.$props._descs || this.$data.descs;
-    this.view = this.$props._view || this.$data.view;
-    this.fetchs = this.format(this.$props._fetch || config.defaultFetchs);
-    this.columns = this.format(this.$props._columns || config.defaultColumns);
-    this.options = this.format(this.$props._options || config.defaultOptions);
-    console.debug('fetch:', this.fetch, 'columns:', this.columns);
+    this.loadConfig();
+    this.fetchs = this.format(this.$props._fetchs || this.config.fetchs);
+    this.columns = this.format(this.$props._columns || this.config.columns);
+    this.options = this.format(this.$props._options || this.config.options);
+    this.datas = this.format(this.$props._options || this.config.datas);
+    this.title = this.$props._title || this.config.title || '';
+    this.desc = this.$props.desc || this.config.desc || '';
+    this.view = this.$props._view || this.config.view || '';
   },
   computed: {
-    config() {
-      return config
+    jq() {
+      return window.jQuery;
     },
-    reloadFetch() {
+    fetch() {
       return _.debounce(this.fetchData, 500);
-    },
+    }
   },
   methods: {
-    reload() {
-      this.reloadFetch();
-    },
-    build() {
-      var fetchs = this.parse(this.fetchs);
-      var columns = this.parse(this.columns);
-      var options = this.parse(this.options);
-      var querys = {
-        _fetchs: this.json(fetchs),
-        _columns: this.json(columns),
-        _options: this.json(options),
-      };
-      this.url = '/#' + this.view + buildUrl({queryParams: querys});
-      this.path = {path: this.view, query: querys};
-    },
-    format(input) {
-      return jsonFormat(input, {
-        type: 'space',
-        size: 2
-      });
-    },
-    json(value) {
-      return JSON.stringify(value);
-    },
-    parse(value) {
-      return JSON.parse(value);
+    async loadConfig() {
+      var vm = this;
+      if (this._config) {
+        const response = await axios.get(this._config);
+        response.then((response)=> vm.config = response.data);
+      } else {
+        this.config = config;
+      } 
     },
     fetchData() {
       var vm = this;
@@ -141,7 +127,35 @@ export default {
       }).finally(function () {
         
       }); 
-    }
+    },
+    
+    format(input) {
+      if (!input) {
+        return "";
+      }
+      if (input == 'string') {
+        input = this.parse(input)
+      }
+      return jsonFormat(input, {type: 'space', size: 2});
+    },
+    json(value) {
+      return JSON.stringify(value);
+    },
+    parse(value) {
+      return JSON.parse(value);
+    },
+    build() {
+      var fetchs = this.parse(this.fetchs);
+      var columns = this.parse(this.columns);
+      var options = this.parse(this.options);
+      var querys = {
+        _fetchs: this.json(fetchs),
+        _columns: this.json(columns),
+        _options: this.json(options),
+      };
+      this.url = '/#' + this.view + buildUrl({queryParams: querys});
+      this.path = {path: this.view, query: querys};
+    },
   }
 };
 </script>
