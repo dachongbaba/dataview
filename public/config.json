@@ -8,7 +8,7 @@
     "method": "post",
     "url": "/data/search/m2/v1/aggregation/common",
     "params": {
-      "tableName": "o_express",
+      "tableName": "o_user",
       "query": "{\"bool\":{\"must\":[]}}"
     },
     "headers": {
@@ -31,8 +31,18 @@
   },
   "columns": [
     {
-      "title": "Id",
-      "data": "id",
+      "title": "Num",
+      "data": "user_num",
+      "sortable": true
+    },
+    {
+      "title": "Username",
+      "data": "username",
+      "sortable": true
+    },
+    {
+      "title": "Nickname",
+      "data": "nickname",
       "sortable": true
     },
     {
@@ -48,24 +58,8 @@
   ],
   "options": [
     {
-      "label": "lable1",
-      "name": "filter1",
-      "items": [
-        "aaaaa",
-        "bbbbb"
-      ]
-    },
-    {
-      "label": "lable2",
-      "name": "filter2",
-      "items": [
-        "aaaaa",
-        "bbbbb"
-      ]
-    },
-    {
-      "label": "lable3",
-      "name": "filter3",
+      "label": "User",
+      "name": "id",
       "fetchs": {
         "method": "post",
         "url": "/data/search/m1/v1/search/common",
@@ -80,19 +74,14 @@
         "paths": {
           "query": "query",
           "data": "payload.content",
-          "title": "receipt_name",
-          "desc": "city",
+          "label": "username",
+          "title": "user_num",
+          "desc": ["username"],
+          "icon": "head",
           "id": "id"
         }
       },
       "datas": []
-    },
-    {
-      "label": "lable4",
-      "name": "filter4",
-      "datetime": {
-        "type": "date"
-      }
     }
   ]
 }
