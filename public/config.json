@@ -8,7 +8,7 @@
     "method": "post",
     "url": "/data/search/m2/v1/aggregation/common",
     "params": {
-      "tableName": "o_express",
+      "tableName": "o_user",
       "query": "{\"bool\":{\"must\":[]}}"
     },
     "headers": {
@@ -32,7 +32,17 @@
   "columns": [
     {
       "title": "Id",
-      "data": "id",
+      "data": "user_num",
+      "sortable": true
+    },
+    {
+      "title": "username",
+      "data": "username",
+      "sortable": true
+    },
+    {
+      "title": "nickname",
+      "data": "nickname",
       "sortable": true
     },
     {
@@ -80,8 +90,10 @@
         "paths": {
           "query": "query",
           "data": "payload.content",
-          "title": "receipt_name",
-          "desc": "city",
+          "label": "username",
+          "title": "user_num",
+          "desc": ["username"],
+          "icon": "head",
           "id": "id"
         }
       },
