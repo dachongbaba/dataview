@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "publish": "npm run build && node ghpages.js"
+    "publish": "npm run build && node ghpages.js",
+    "github": "cross-env REPO_URL=https://github.com/dachongbaba/dataview.git npm run publish"
   },
   "dependencies": {
     "axios": "^0.19.2",
