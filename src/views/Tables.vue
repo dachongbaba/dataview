@@ -67,10 +67,18 @@ export default {
     this.fetchs = _.merge({}, config.fetchs, fetchs);
     
     var columns = JSON.parse(this._columns || []);
-    this.columns = columns.map((item) => _.merge({}, config.columns[item] || {}, columns[item] ? columns[item] : {}));
+    if (columns.length) {
+      this.columns = columns;
+    } else {
+      this.columns = columns.map((item) => _.merge({}, config.columns[item] || {}, columns[item] ? columns[item] : {}));
+    }
     
     var filters = JSON.parse(this._filters || []);
-    this.filters = filters.map((item) => _.merge({}, config.filters[item] || {}, filters[item] ? filters[item] : {}));
+    if (filters.length) {
+      this.filters = filters;
+    } else {
+      this.filters = filters.map((item) => _.merge({}, config.filters[item] || {}, filters[item] ? filters[item] : {}));
+    }
   },
 
   components: {
