@@ -3,9 +3,9 @@
 
 const defaultViews = [
   'table',
-  'card',
-  'list',
 ];
+
+const defaultOptions = {};
 
 const defaultFetchs = {
   method: 'post',
@@ -32,23 +32,23 @@ const defaultFetchs = {
     size: 20
   }
 };
-const defaultColumns = [
-  {title: 'Id', data: 'id', sortable: true}, 
-  {title: 'Ctime', data: 'ctime', format: 'formatDate|YYYY-MM-DD HH:mm:ss'}, 
-  {title: 'Utime', data: 'utime', format: 'formatDate|YYYY-MM-DD HH:mm:ss'},
-];
-const defaultOptions = [
-  {
+const defaultColumns = {
+  id: {title: 'Id', data: 'id', sortable: true}, 
+  ctime: {title: 'Ctime', data: 'ctime', format: 'formatDate|YYYY-MM-DD HH:mm:ss'}, 
+  utime: {title: 'Utime', data: 'utime', format: 'formatDate|YYYY-MM-DD HH:mm:ss'},
+};
+const defaultFilters = {
+  filter1: {
     label: 'lable1',
     name: 'filter1',
     items: ['aaaaa', 'bbbbb']
   },
-  {
+  filter2: {
     label: 'lable2',
     name: 'filter2',
     items: ['aaaaa', 'bbbbb']
   },
-  {
+  filter3: {
     label: 'lable3',
     name: 'filter3',
     fetchs: {
@@ -74,21 +74,22 @@ const defaultOptions = [
     },
     datas: []
   },
-  {
+  filter4: {
     label: 'lable4',
     name: 'filter4',
     datetime: {
       type: 'date'
     }
   },
-];
+};
 
 const defaultDatas = null;
 
 export default {
   views: defaultViews,
+  options: defaultOptions,
   fetchs: defaultFetchs,
   columns: defaultColumns,
-  options: defaultOptions,
+  filters: defaultFilters,
   datas: defaultDatas,
 };

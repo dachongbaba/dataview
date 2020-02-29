@@ -1,78 +1,38 @@
 <template>
-  <div class="table-responsive">
-    <datatable class="table table-striped" :columns="columns" :data="datas" />
+  <div class="card">
+    <data-table class="table table-striped" :columns="columns" :data="datas" />
   </div>
 </template>
 
 <script>
-import config from '../config';
-import _ from 'loadsh';
-import axios from 'axios';
-
-import Vue from 'vue';
-import { VuejsDatatableFactory } from 'vuejs-datatable';
-Vue.use( VuejsDatatableFactory );
+import DataTable from '../components/DataTable';
 
 export default {
-  name: "Cards",
+  name: "Tables",
   props: [
-    '_fetch',
+    '_options',
     '_columns',
-    '_datas',
+    '_fetchs',
   ],
 
   data: function () {
     return {
-      fetch: {},
+      options: {},
       columns: [],
-      datas: [],
+      fetchs: {},
+      filters: {},
+      datas: {},
     }
   },
 
-  created() {
-    this.$data.fetch = this.$props._fetch || config.defaultDatas.fetch;
-    this.$data.columns = this.$props._columns || config.defaultDatas.columns;
-    this.$data.datas = this.$props._datas || config.defaultDatas.datas;
-    this.reloadFetch();
+  created() { 
+    this.options = JSON.parse(this.$props._options) || {};
+    this.columns = JSON.parse(this.$props._columns) || [];
+    this.fetchs = JSON.parse(this.$props._fetchs) || {};
   },
 
-  computed: {
-    now() {
-      return Date.now()
-    },
-    
-    reloadFetch() {
-      return _.debounce(this.fetchData, 500);
-    },
-  },
-
-  methods: {
-    fetchData() {
-      var vm = this;
-      var fetch = {
-        method: 'post',
-        url: '/data/search/m2/v1/aggregation/common',
-        params: {
-          tableName: 'o_express',
-          query: '{"bool":{"must":[]}}',
-        },
-        headers: { 
-          'content-type': 'application/x-www-form-urlencoded'
-        }
-      }
-      axios(fetch).then(function (response) {
-        console.debug(fetch, response);
-        //vm.datas.columns = _.keys(data);
-        vm.datas = _.get(response, 'data.payload.content', []);
-      }).catch(function (error) {
-        console.error(fetch, error);
-      }).finally(function () {
-        // vm.datas = config.test1Datas;
-      }); 
-    }
+  components: {
+    DataTable
   }
 };
 </script>
-
-<style scoped>
-</style>

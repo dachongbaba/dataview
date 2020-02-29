@@ -90,7 +90,7 @@
           <a 
             href="#"
             class="dropdown-item" 
-            v-for="(filter, id) in options" 
+            v-for="(filter, id) in filters" 
             @click.prevent="addFilter(filter)"
             :key="id"
           ><i v-if="filter.fa" class="fa" :class="filter.fa"/> {{ filter.label }}</a>
@@ -118,7 +118,7 @@ function fetchData(vm, filter) {
 export default {
   name: "DataFilter",
   props: {
-    options: {
+    filters: {
       type: Array,
       default: function () {
         return []
@@ -189,7 +189,7 @@ export default {
         }
         
       }
-      this.$emit('update:filters', filters)
+      this.$emit('update:datas', filters)
     }
   },
   components: {

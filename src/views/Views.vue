@@ -1,75 +1,83 @@
 <template>
   <div class="jumbotron">
-    <div class="row">
-      <form class="col-12">
-        <h1 v-if="title" class="display-4">{{ title }}</h1>
-        <p v-if="desc">{{ desc }}</p>
-        <div class="form-group">
-          <label for="view">View</label>
-          <select id="view" v-model="view" class="form-control font-weight-bolder">
-            <option v-for="option in config.views" :key="option" :value="option">
-              {{ option }}
-            </option>
-          </select>
-          <small id="viewHelp" class="form-text text-muted"></small>
-        </div>
+    <form>
+      <div class="form-group">
+        <select v-model="datas.view" class="form-control font-weight-bolder">
+          <option v-for="option in config.views" :key="option" :value="option">
+            {{ option }}
+          </option>
+        </select>
+        <small id="viewHelp" class="form-text text-muted">view type</small>
+      </div>
 
-        <div class="form-group">
-          <label for="fetchs">Fetchs</label>
-          <textarea id="fetchs" v-model="fetchs" class="form-control font-weight-bolder" rows="3"></textarea>
-          <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
-        
-        <div class="form-group">
-          <label for="columns">Columns</label>
-          <textarea id="columns" v-model="columns" class="form-control font-weight-bolder" rows="3"></textarea>
-          <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
+      <div class="form-group">
+        <textarea v-model="datas.title" class="col form-control font-weight-bolder" :rows="textline(datas.title)" placeholder="Title" data-toggle="collapse" data-target="#titleConfig"></textarea>
+        <small id="viewHelp" class="form-text text-muted">view desc</small>
+        <pre id="descConfig" class="collapse"><code>{{ config.title }}</code></pre>
+      </div>
 
-        <div class="form-group">
-          <label for="options">Options</label>
-          <textarea id="options" v-model="options" class="form-control font-weight-bolder" rows="3"></textarea>
-          <small id="viewHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
-      </form>
+      <div class="form-group">
+        <textarea v-model="datas.desc" class="col form-control font-weight-bolder" :rows="textline(datas.desc)" placeholder="Desc" data-toggle="collapse" data-target="#descConfig"></textarea>
+        <small id="viewHelp" class="form-text text-muted">view desc</small>
+        <pre id="descConfig" class="collapse"><code>{{ config.desc }}</code></pre>
+      </div>
 
-      <div class="col-12 text-break">
+      <div class="form-group">
+          <textarea v-model="datas.fetchs" class="col form-control font-weight-bolder" :rows="textline(datas.fetchs)" placeholder="Fetch" data-toggle="collapse" data-target="#fetchConfig"></textarea>
+          <small id="viewHelp" class="form-text text-muted">data fetch</small>
+          <pre id="fetchConfig" class="collapse"><code>{{ format(config.fetchs) }}</code></pre>
+      </div>
+
+      <div class="form-group">
+        <textarea id="columns" v-model="datas.columns" class="form-control font-weight-bolder" :rows="textline(datas.columns)" placeholder="Column" data-toggle="collapse" data-target="#columnConfig"></textarea>
+        <small id="viewHelp" class="form-text text-muted">table column</small>
+        <pre id="columnConfig" class="collapse"><code>{{ format(config.columns) }}</code></pre>
+      </div>
+
+      <div class="form-group">
+        <textarea id="filter" v-model="datas.filters" class="form-control font-weight-bolder" :rows="textline(datas.filters)" placeholder="Filter" data-toggle="collapse" data-target="#filterConfig"></textarea>
+        <small id="viewHelp" class="form-text text-muted">filter search</small>
+        <pre id="filterConfig" class="collapse"><code>{{ format(config.filters) }}</code></pre>
+      </div>
+      <div class="form-group">
         <div class="form-row justify-content-center">
           <div class="col-auto">
             <button v-on:click.stop.prevent="fetchData" class="btn btn-primary">Load Data</button>
           </div>
           <div class="col-auto">
-            <button v-on:click.stop.prevent="buildData" class="btn btn-primary">Build Link</button>
+            <button v-on:click.stop.prevent="buildConfig" class="btn btn-primary">Build Config</button>
+          </div>
+          <div class="col-auto">
+            <button v-on:click.stop.prevent="buildLink" class="btn btn-primary">Build Link</button>
           </div>
         </div>
-        <div class="text-break">
-          <router-link v-if="url" :to="path">{{ url }}</router-link>
-        </div>
       </div>
-    </div>
-    <div>
-      <pre>{{ datas }}</pre>
-    </div>
+      <div class="form-group">
+        <div class="text-break">
+            <router-link :to="{path: datas.view, query:$route.query}">{{ viewurl }}</router-link>
+          </div>
+        <pre>{{ result }}</pre>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
 import _ from 'loadsh';
 import axios from 'axios';
-import buildUrl from 'build-url';
-import jsonFormat from 'json-format';
 import config from '../config';
+import buildUrl from 'build-url';
 
 function fetchData(vm) {
-  var fetchs = JSON.parse(vm.fetchs);
+  var fetchs = _.merge({}, config.fetchs, JSON.parse(vm.datas.fetchs));
   fetchs.params.page = fetchs.pages.page + fetchs.pages.index;
   fetchs.params.size = fetchs.pages.size;
   axios(fetchs).then(function (response) {
     if (response && response.data) {
-      vm.datas = vm.format(response.data);
+      vm.result = vm.format(response.data);
     }
   }).catch(function (error) {
-    vm.datas = vm.format(error);
+    vm.result = vm.format(error);
   });
 }
 
@@ -77,41 +85,49 @@ export default {
   name: "Views",
   props: [
     '_config',
-    '_fetchs',
-    '_columns',
-    '_options',
     '_title',
     '_desc',
     '_view',
+    '_fetchs',
+    '_columns',
+    '_filters',
+    '_options',
   ],
   data() {
     return {
       config: {},
-      title: '',
-      desc: '',
-      view: '',
-      fetchs: '',
-      columns: '',
-      options: '',
-      datas: '',
-      path: '',
-      url: '',
+      datas: {
+        title: '',
+        desc: '',
+        view: '',
+        fetchs: '',
+        columns: '',
+        filters: '',
+        options: '',
+      },
+      result: '',
+      viewurl: buildUrl('http://localhost:8080/', {
+        path: 'dataview',
+        hash: this.$route.query._view,
+        queryParams: this.$route.query
+      }),
     };
   },
   async created() {
     if (this._config) {
       let res = await axios.get(this._config);
-      this.config = res.data;
+      _.merge(this.config, config, res.data);
     } else {
-      this.config = config;
+      _.merge(this.config, config);
     }
-    this.title = this.$props._title || this.config.title || '';
-    this.desc = this.$props.desc || this.config.desc || '';
-    this.view = this.$props._view || this.config.view || '';
-    this.fetchs = this.format(this.$props._fetchs || this.config.fetchs || {});
-    this.columns = this.format(this.$props._columns || this.config.columns || []);
-    this.options = this.format(this.$props._options || this.config.options || []);
-    this.datas = this.format(this.$props._options || this.config.datas || null);
+    this.datas.title = this._title || '';
+    this.datas.desc = this._desc || '';
+    this.datas.view = this._view || '';
+    this.datas.fetchs = this.format(this._fetchs || {});
+    this.datas.columns = this.format(this._columns || []);
+    this.datas.filters = this.format(this._filters || []);
+    this.datas.options = this.format(this._options|| []);
+    this.datas.datas = this.format(this._datas || []);
   },
   computed: {
     jq() {
@@ -121,6 +137,7 @@ export default {
       return _.debounce(fetchData, 500);
     }
   },
+  
   methods: {
     async loadConfig(url) {
       if (url) {
@@ -133,25 +150,41 @@ export default {
       return this.fetch(this);
     },
     buildData() {
-      var fetchs = JSON.parse(this.fetchs);
-      var columns = JSON.parse(this.columns);
-      var options = JSON.parse(this.options);
-      var querys = {
+      var fetchs = JSON.parse(this.datas.fetchs);
+      var columns = JSON.parse(this.datas.columns);
+      var filters = JSON.parse(this.datas.filters);
+      var options = JSON.parse(this.datas.options);
+      return _.merge({}, this.$route.query, {
+        _view: this.datas.view,
+        _title: this.datas.title,
+        _desc: this.datas.desc,
         _fetchs: JSON.stringify(fetchs),
         _columns: JSON.stringify(columns),
+        _filters: JSON.stringify(filters),
         _options: JSON.stringify(options),
-      };
-      this.url = '/#' + this.view + buildUrl({queryParams: querys});
-      this.path = {path: this.view, query: querys};
+      });
+    },
+    buildConfig() {
+      this.result = this.format(this.buildData());
+    },
+    buildLink() {
+      this.$router.replace({
+        path: 'views',
+        query: this.buildData()
+      });
     },
     format(input) {
       if (!input) {
-        return "";
+        return;
       }
-      if (input == 'string') {
+      if (typeof input === 'string') {
         input = JSON.parse(input)
       }
-      return jsonFormat(input, {type: 'space', size: 2});
+      return JSON.stringify(input, null, 2);
+    },
+    textline(input) {
+      var len = input.split('\n').length;
+      return len || 1;
     }
   }
 };
