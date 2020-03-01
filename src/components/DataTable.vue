@@ -108,7 +108,7 @@ export default {
   },
 
   watch: {
-    filters: {
+    querys: {
       handler () {
         this.fetchData();
       },
