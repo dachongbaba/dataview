@@ -1,0 +1,87 @@
+{
+  "views": [
+    "table",
+    "card",
+    "list"
+  ],
+  "fetchs": {
+    "method": "post",
+    "url": "/data/search/m2/v1/aggregation/common",
+    "params": {
+      "tableName": "o_user",
+      "query": "{\"bool\":{\"must\":[]}}"
+    },
+    "headers": {
+      "content-type": "application/x-www-form-urlencoded",
+      "env": "prod"
+    },
+    "paths": {
+      "dataPath": "payload.content",
+      "pagePath": "payload.number",
+      "totalPath": "payload.totalPages",
+      "countPath": "payload.totalElements",
+      "endPath": "payload.totalElements",
+      "errorPath": ""
+    },
+    "pages": {
+      "index": 1,
+      "page": 0,
+      "size": 20
+    }
+  },
+  "columns": [
+    {
+      "title": "Num",
+      "data": "user_num",
+      "sortable": true
+    },
+    {
+      "title": "Username",
+      "data": "username",
+      "sortable": true
+    },
+    {
+      "title": "Nickname",
+      "data": "nickname",
+      "sortable": true
+    },
+    {
+      "title": "Ctime",
+      "data": "ctime",
+      "format": "formatDate|YYYY-MM-DD HH:mm:ss"
+    },
+    {
+      "title": "Utime",
+      "data": "utime",
+      "format": "formatDate|YYYY-MM-DD HH:mm:ss"
+    }
+  ],
+  "options": [
+    {
+      "label": "User",
+      "name": "id",
+      "fetchs": {
+        "method": "post",
+        "url": "/data/search/m1/v1/search/common",
+        "params": {
+          "tableName": "u_user",
+          "query": ""
+        },
+        "headers": {
+          "content-type": "application/x-www-form-urlencoded",
+          "env": "test"
+        },
+        "paths": {
+          "query": "query",
+          "data": "payload.content",
+          "label": "username",
+          "title": "user_num",
+          "desc": ["username"],
+          "icon": "head",
+          "id": "id"
+        }
+      },
+      "datas": []
+    }
+  ]
+}
