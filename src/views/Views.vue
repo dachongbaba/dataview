@@ -54,7 +54,7 @@
       </div>
       <div class="form-group">
         <div class="text-break">
-            <router-link :to="{path: datas.view, query:$route.query}">{{ viewurl }}</router-link>
+            <router-link :to="{path: datas.view, query:$route.query}">{{ view }}</router-link>
           </div>
         <pre>{{ result }}</pre>
       </div>
@@ -89,7 +89,7 @@ export default {
       config: {},
       datas: {},
       result: '',
-      viewurl: '',
+      view: '',
     };
   },
   async created() {
@@ -110,11 +110,7 @@ export default {
       options: '{}',
     }, this.$route.query);
 
-    this.viewurl = buildUrl(config.url||'/', {
-      path: 'dataview',
-      hash: this.datas.view,
-      queryParams: this.datas
-    });
+    this.view = this.viewurl();
   },
   computed: {
     jq() {
@@ -153,6 +149,9 @@ export default {
     },
     buildLink() {
       this.$router.replace({path: 'views', query: this.buildData()});
+    },
+    viewurl() {
+      return buildUrl('dataview/#/' + this.datas.view, {queryParams: this.buildData()});
     },
     format(input) {
       if (!input) {
