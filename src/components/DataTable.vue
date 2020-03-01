@@ -56,8 +56,8 @@ import _ from 'loadsh';
 import axios from 'axios';
 import moment from 'moment';
 
-function fetchData(vm, fetchs, filters) {
-  fetchs.data = filters;
+function fetchData(vm, fetchs, querys) {
+  fetchs.data = querys;
   fetchs.params.page = this.page + fetchs.pages.index;
   fetchs.params.size = this.size;
   axios(fetchs).then(function (response) {
@@ -87,7 +87,7 @@ export default {
         return {}
       },
     },
-    filters: {
+    querys: {
       type: Object,
       default: function () {
         return {}
@@ -146,7 +146,7 @@ export default {
   
   methods: {
     fetchData() {
-      return this.fetch(this, this.fetchs, this.filters);
+      return this.fetch(this, this.fetchs, this.querys);
     },
     resetPage() {
         this.page = this.fetchs.pages.page || 0;

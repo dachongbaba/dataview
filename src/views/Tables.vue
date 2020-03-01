@@ -1,14 +1,14 @@
 <template>
   <div>
     <data-filter 
-      :filters="filters" 
-      :datas.sync="search"
+      :items="datas.filters" 
+      :querys.sync="querys"
     />
     <data-table 
-      :fields="columns" 
-      :fetchs="fetchs"
-      :search="search" 
-      :datas.sync="datas"
+      :fields="datas.columns" 
+      :fetchs="datas.fetchs"
+      :result.sync="result"
+      :querys="querys" 
     />
   </div>
 </template>
@@ -23,62 +23,65 @@ import DataFilter from '../components/DataFilter';
 export default {
   name: "Tables",
   props: [
-    '_config',
-    '_title',
-    '_desc',
-    '_view',
-    '_fetchs',
-    '_columns',
-    '_filters',
-    '_options',
   ],
-
   data: function () {
     return {
       config: {},
-      title: '',
-      desc: '',
-      view: '',
-      options: {},
-      fetchs: {},
-      columns: [],
-      filters: [],
       datas: {},
-      search: {},
-    }
+      result: {},
+      querys: {},
+    };
   },
 
   async created() { 
-    if (this._config) {
-      let res = await axios.get(this._config);
-      _.merge(this.config, config, res.data);
+    if (this.datas.config) {
+      let res = await axios.get(this.datas.config);
+      this.config = _.merge({}, config, res.data);
     } else {
-      _.merge(this.config, config);
+      this.config = _.merge({}, config);
     }
 
-    this.title = this._title || '';
-    this.desc = this._desc || '';
-    this.view = this._view || '';
+    var datas = this.$route.query;
 
-    var options = JSON.parse(this._options || {});
-    this.options = _.merge({}, config.options, options);
+    var options = JSON.parse(datas.options || {});
+    var fetchs = JSON.parse(datas.fetchs || {});
+    var columns = JSON.parse(datas.columns || []);
+    var filters = JSON.parse(datas.filters || []);
 
-    var fetchs = JSON.parse(this._fetchs || {});
-    this.fetchs = _.merge({}, config.fetchs, fetchs);
+    datas.options = _.merge({}, config.options, options);
+    datas.fetchs = _.merge({}, config.fetchs, fetchs);
+    columns = _.clone(config.columns);
+    datas.columns = _.map(columns, (item, key) => {
+      if (typeof key === 'number') {
+        if (typeof item === 'string') {
+          return config.columns[item];
+        } else {
+          return item;
+        }
+      }
+      return _.merge({}, config.columns[key] || {}, columns[item] ? columns[item] : {});
+    });
     
-    var columns = JSON.parse(this._columns || []);
-    if (columns.length) {
-      this.columns = columns;
-    } else {
-      this.columns = columns.map((item) => _.merge({}, config.columns[item] || {}, columns[item] ? columns[item] : {}));
-    }
+    datas.filters = _.map(filters, (item, key) => {
+      if (typeof key === 'number') {
+        if (typeof item === 'string') {
+          return config.filters[item];
+        } else {
+          return item;
+        }
+      }
+      return _.merge({}, config.filters[key] || {}, filters[item] ? filters[item] : {});
+    });
     
-    var filters = JSON.parse(this._filters || []);
-    if (filters.length) {
-      this.filters = filters;
-    } else {
-      this.filters = filters.map((item) => _.merge({}, config.filters[item] || {}, filters[item] ? filters[item] : {}));
-    }
+    this.datas = _.merge({
+      view: '',
+      title: '',
+      desc: '',
+      fetchs: '{}',
+      columns: '[]',
+      filters: '[]',
+      options: '{}',
+    }, datas);
   },
 
   components: {

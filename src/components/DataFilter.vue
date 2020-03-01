@@ -1,7 +1,7 @@
 <template>
   <div class="border rounded-left rounded-right">
     <ul class="nav mt-0 mb-0 align-self-center" style="width:100%;">
-      <template v-for="(filter, index) in datas">
+      <template v-for="(filter, index) in filters">
         <li v-if="filter.datetime" :key="index" class="nav-item p-1 align-self-center">
           <a class="btn bg-light d-flex h-100">
             <span class="align-self-center mr-1">{{ filter.label }}:</span>
@@ -90,7 +90,7 @@
           <a 
             href="#"
             class="dropdown-item" 
-            v-for="(filter, id) in filters" 
+            v-for="(filter, id) in items" 
             @click.prevent="addFilter(filter)"
             :key="id"
           ><i v-if="filter.fa" class="fa" :class="filter.fa"/> {{ filter.label }}</a>
@@ -118,7 +118,7 @@ function fetchData(vm, filter) {
 export default {
   name: "DataFilter",
   props: {
-    filters: {
+    items: {
       type: Array,
       default: function () {
         return []
@@ -127,7 +127,7 @@ export default {
   },
   data() {
     return {
-      datas: [],
+      filters: [],
       value: ''
    };
   },
@@ -155,7 +155,7 @@ export default {
         show: true
       });
       this.fetchFilter(item);
-      this.datas.push(item);
+      this.filters.push(item);
     },
     setFilterValue(index, filter, value, text = '') {
       this.$set(filter, 'show', false);
@@ -163,7 +163,7 @@ export default {
       this.$set(filter, 'text', text);
     },
     removeFilter(index) {
-      this.datas.splice(index, 1);
+      this.filters.splice(index, 1);
     },
     fetchFilter(filter) {
       if (!filter.fetchs) {
@@ -180,8 +180,8 @@ export default {
     },
     buildFilter() {
       var filters = {};
-      for (var i = 0; i < this.datas.length; i++) {
-        var item = this.datas[i];
+      for (var i = 0; i < this.filters.length; i++) {
+        var item = this.filters[i];
         if (typeof item.value == 'object') {
           filters[item.name] = item.value.id;
         } else {
@@ -189,7 +189,7 @@ export default {
         }
         
       }
-      this.$emit('update:datas', filters)
+      this.$emit('update:querys', filters)
     }
   },
   components: {

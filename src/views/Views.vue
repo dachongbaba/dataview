@@ -1,24 +1,24 @@
 <template>
   <div class="jumbotron">
-    <form>
+    <form>{{ datas.view||'aaa' }}
       <div class="form-group">
         <select v-model="datas.view" class="form-control font-weight-bolder">
           <option v-for="option in config.views" :key="option" :value="option">
             {{ option }}
           </option>
         </select>
-        <small id="viewHelp" class="form-text text-muted">view type</small>
+        <small id="viewHelp" class="form-text text-muted">dataview type</small>
       </div>
 
       <div class="form-group">
         <textarea v-model="datas.title" class="col form-control font-weight-bolder" :rows="textline(datas.title)" placeholder="Title" data-toggle="collapse" data-target="#titleConfig"></textarea>
-        <small id="viewHelp" class="form-text text-muted">view desc</small>
+        <small id="viewHelp" class="form-text text-muted">dataview desc</small>
         <pre id="descConfig" class="collapse"><code>{{ config.title }}</code></pre>
       </div>
 
       <div class="form-group">
         <textarea v-model="datas.desc" class="col form-control font-weight-bolder" :rows="textline(datas.desc)" placeholder="Desc" data-toggle="collapse" data-target="#descConfig"></textarea>
-        <small id="viewHelp" class="form-text text-muted">view desc</small>
+        <small id="viewHelp" class="form-text text-muted">dataview desc</small>
         <pre id="descConfig" class="collapse"><code>{{ config.desc }}</code></pre>
       </div>
 
@@ -30,13 +30,13 @@
 
       <div class="form-group">
         <textarea id="columns" v-model="datas.columns" class="form-control font-weight-bolder" :rows="textline(datas.columns)" placeholder="Column" data-toggle="collapse" data-target="#columnConfig"></textarea>
-        <small id="viewHelp" class="form-text text-muted">table column</small>
+        <small id="viewHelp" class="form-text text-muted">data column</small>
         <pre id="columnConfig" class="collapse"><code>{{ format(config.columns) }}</code></pre>
       </div>
 
       <div class="form-group">
         <textarea id="filter" v-model="datas.filters" class="form-control font-weight-bolder" :rows="textline(datas.filters)" placeholder="Filter" data-toggle="collapse" data-target="#filterConfig"></textarea>
-        <small id="viewHelp" class="form-text text-muted">filter search</small>
+        <small id="viewHelp" class="form-text text-muted">data filter</small>
         <pre id="filterConfig" class="collapse"><code>{{ format(config.filters) }}</code></pre>
       </div>
       <div class="form-group">
@@ -83,51 +83,38 @@ function fetchData(vm) {
 
 export default {
   name: "Views",
-  props: [
-    '_config',
-    '_title',
-    '_desc',
-    '_view',
-    '_fetchs',
-    '_columns',
-    '_filters',
-    '_options',
-  ],
+  props: [],
   data() {
     return {
       config: {},
-      datas: {
-        title: '',
-        desc: '',
-        view: '',
-        fetchs: '',
-        columns: '',
-        filters: '',
-        options: '',
-      },
+      datas: {},
       result: '',
-      viewurl: buildUrl('http://localhost:8080/', {
-        path: 'dataview',
-        hash: this.$route.query._view,
-        queryParams: this.$route.query
-      }),
+      viewurl: '',
     };
   },
   async created() {
-    if (this._config) {
-      let res = await axios.get(this._config);
-      _.merge(this.config, config, res.data);
+    if (this.datas.config) {
+      let res = await axios.get(this.datas.config);
+      this.config = _.merge({}, config, res.data);
     } else {
-      _.merge(this.config, config);
+      this.config = _.merge({}, config);
     }
-    this.datas.title = this._title || '';
-    this.datas.desc = this._desc || '';
-    this.datas.view = this._view || '';
-    this.datas.fetchs = this.format(this._fetchs || {});
-    this.datas.columns = this.format(this._columns || []);
-    this.datas.filters = this.format(this._filters || []);
-    this.datas.options = this.format(this._options|| []);
-    this.datas.datas = this.format(this._datas || []);
+
+    this.datas = _.merge({
+      view: '',
+      title: '',
+      desc: '',
+      fetchs: '{}',
+      columns: '[]',
+      filters: '[]',
+      options: '{}',
+    }, this.$route.query);
+
+    this.viewurl = buildUrl(config.url||'/', {
+      path: 'dataview',
+      hash: this.datas.view,
+      queryParams: this.datas
+    });
   },
   computed: {
     jq() {
@@ -154,24 +141,18 @@ export default {
       var columns = JSON.parse(this.datas.columns);
       var filters = JSON.parse(this.datas.filters);
       var options = JSON.parse(this.datas.options);
-      return _.merge({}, this.$route.query, {
-        _view: this.datas.view,
-        _title: this.datas.title,
-        _desc: this.datas.desc,
-        _fetchs: JSON.stringify(fetchs),
-        _columns: JSON.stringify(columns),
-        _filters: JSON.stringify(filters),
-        _options: JSON.stringify(options),
+      return _.merge({}, this.datas, {
+        fetchs: JSON.stringify(fetchs),
+        columns: JSON.stringify(columns),
+        filters: JSON.stringify(filters),
+        options: JSON.stringify(options),
       });
     },
     buildConfig() {
       this.result = this.format(this.buildData());
     },
     buildLink() {
-      this.$router.replace({
-        path: 'views',
-        query: this.buildData()
-      });
+      this.$router.replace({path: 'views', query: this.buildData()});
     },
     format(input) {
       if (!input) {
