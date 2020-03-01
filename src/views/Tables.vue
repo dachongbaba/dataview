@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="datas">
     <data-filter 
       :items="datas.filters" 
       :querys.sync="querys"
@@ -26,17 +26,23 @@ export default {
   ],
   data: function () {
     return {
-      config: {},
-      datas: {},
-      result: {},
-      querys: {},
+      config: null,
+      datas: null,
+      result: null,
+      querys: null,
     };
   },
 
   async created() { 
-    if (this.datas.config) {
-      let res = await axios.get(this.datas.config);
-      this.config = _.merge({}, config, res.data);
+    if (this.$route.query.config) {
+      let response = {};
+      try {
+        response = await axios.get(this.$route.query.config);
+        this.config = _.merge({}, config, response.data || {});
+      } catch (ex) {
+        alert('config ' + this.$route.query.config + ' load error\n' + ex.message + ' ')
+        return
+      }
     } else {
       this.config = _.merge({}, config);
     }
