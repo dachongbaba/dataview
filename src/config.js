@@ -8,22 +8,20 @@ const defaultViews = [
 const defaultOptions = {};
 
 const defaultFetchs = {
-  method: 'post',
-  url: '/data/search/m2/v1/aggregation/common',
+  method: 'get',
+  url: 'datas.json',
   params: {
-    tableName: 'o_express',
-    query: '{"bool":{"must":[]}}',
+    query: '',
   },
   headers: { 
     'content-type': 'application/x-www-form-urlencoded',
     'env': 'test'
   },
   paths: {
-    dataPath: 'payload.content',
-    pagePath: 'payload.number',
-    totalPath: 'payload.totalPages',
-    countPath: 'payload.totalElements',
-    endPath: 'payload.totalElements',
+    dataPath: 'list',
+    pagePath: 'page',
+    totalPath: 'total',
+    countPath: 'count',
     errorPath: '',
   },
   pages: {
@@ -34,28 +32,20 @@ const defaultFetchs = {
 };
 const defaultColumns = {
   id: {title: 'Id', data: 'id', sortable: true}, 
+  name: {title: 'Name', data: 'name', sortable: true}, 
+  desc: {title: 'Desc', data: 'desc', sortable: true}, 
+  status: {title: 'Status', data: 'status', sortable: true}, 
   ctime: {title: 'Ctime', data: 'ctime', format: 'formatDate|YYYY-MM-DD HH:mm:ss'}, 
   utime: {title: 'Utime', data: 'utime', format: 'formatDate|YYYY-MM-DD HH:mm:ss'},
 };
 const defaultFilters = {
-  filter1: {
-    label: 'lable1',
-    name: 'filter1',
-    items: ['aaaaa', 'bbbbb']
-  },
-  filter2: {
-    label: 'lable2',
-    name: 'filter2',
-    items: ['aaaaa', 'bbbbb']
-  },
-  filter3: {
-    label: 'lable3',
-    name: 'filter3',
+  id: {
+    label: 'Id',
+    name: 'id',
     fetchs: {
-      method: 'post',
-      url: '/data/search/m1/v1/search/common',
+      method: 'get',
+      url: 'datas.json',
       params: {
-        tableName: 'u_user',
         query: '',
       },
       headers: { 
@@ -63,23 +53,62 @@ const defaultFilters = {
         'env': 'test'
       },
       paths: {
+        data: 'list',
         query: 'query',
-        data: 'payload.content',
-        label: 'username',
-        title: 'user_num',
-        desc: ['username'],
-        icon: 'head',
+        label: 'id',
+        title: 'id',
+        desc: ['name'],
         id: 'id'
       },
     },
     datas: []
   },
-  filter4: {
-    label: 'lable4',
-    name: 'filter4',
+  name: {
+    label: 'Name',
+    name: 'name',
+    fetchs: {
+      method: 'get',
+      url: 'datas.json',
+      params: {
+        query: '',
+      },
+      headers: { 
+        'content-type': 'application/x-www-form-urlencoded',
+        'env': 'test'
+      },
+      paths: {
+        data: 'list',
+        query: 'query',
+        label: 'name',
+        title: 'name',
+        desc: ['desc'],
+        id: 'id'
+      },
+    },
+    datas: [],
+    fa: '',
+  },
+  status: {
+    label: 'Status',
+    name: 'status',
+    items: ['noactive', 'active'],
+    fa: '',
+  },
+  startDate: {
+    label: 'Start Date',
+    name: 'startDate',
     datetime: {
       type: 'date'
-    }
+    },
+    fa: '',
+  },
+  endDate: {
+    label: 'End Date',
+    name: 'endDate',
+    datetime: {
+      type: 'date'
+    },
+    fa: '',
   },
 };
 

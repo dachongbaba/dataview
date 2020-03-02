@@ -1,6 +1,6 @@
 <template>
   <div class="jumbotron">
-    <form>{{ datas.view||'aaa' }}
+    <form>
       <div class="form-group">
         <select v-model="datas.view" class="form-control font-weight-bolder">
           <option v-for="option in config.views" :key="option" :value="option">
@@ -110,7 +110,20 @@ export default {
       options: '{}',
     }, this.$route.query);
 
-    this.view = this.viewurl();
+    if (!this.$route.query.fetchs) {
+      this.datas.fetchs = this.format({
+        method: config.fetchs.method,
+        url: config.fetchs.url
+      });
+    }
+
+    if (!this.$route.query.columns) {
+      this.datas.columns = this.format(_.keys(config.columns));
+    }
+
+    if (!this.$route.query.filters) {
+      this.datas.filters = this.format(_.keys(config.filters));
+    }
   },
   computed: {
     jq() {
@@ -148,10 +161,9 @@ export default {
       this.result = this.format(this.buildData());
     },
     buildLink() {
-      this.$router.replace({path: 'views', query: this.buildData()});
-    },
-    viewurl() {
-      return buildUrl('dataview/#/' + this.datas.view, {queryParams: this.buildData()});
+      var query = this.buildData();
+      this.$router.replace({path: 'views', query: query});
+      this.view = buildUrl('dataview/#/' + this.datas.view, {queryParams: query});
     },
     format(input) {
       if (!input) {
