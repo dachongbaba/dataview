@@ -179,6 +179,11 @@ export default {
       var text = moment(date).format(fmt);
       return text;
     },
+    formatStat(value, stat = '') {
+      value = value/1;
+      stat = JSON.parse(stat);
+      return stat[value] || value || '-';
+    },
   }
 };
 </script>

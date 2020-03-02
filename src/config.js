@@ -34,7 +34,7 @@ const defaultColumns = {
   id: {title: 'Id', data: 'id', sortable: true}, 
   name: {title: 'Name', data: 'name', sortable: true}, 
   desc: {title: 'Desc', data: 'desc', sortable: true}, 
-  status: {title: 'Status', data: 'status', sortable: true}, 
+  status: {title: 'Status', data: 'status', format: 'formatStat|["Noactive","Active"]'}, 
   ctime: {title: 'Ctime', data: 'ctime', format: 'formatDate|YYYY-MM-DD HH:mm:ss'}, 
   utime: {title: 'Utime', data: 'utime', format: 'formatDate|YYYY-MM-DD HH:mm:ss'},
 };
