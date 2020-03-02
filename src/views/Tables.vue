@@ -67,7 +67,7 @@ export default {
           return item;
         }
       }
-      return _.merge({}, this.config.columns[key] || {}, columns[item] ? columns[item] : {});
+      return _.merge({}, vm.config.columns[key], item);
     });
     
     datas.filters = _.map(filters, (item, key) => {
@@ -78,7 +78,7 @@ export default {
           return item;
         }
       }
-      return _.merge({}, this.config.filters[key] || {}, filters[item] ? filters[item] : {});
+      return _.merge({}, vm.config.filters[key], item);
     });
     
     this.datas = _.merge({
