@@ -87,13 +87,15 @@
             @click.prevent="submitFilter"
           ><i class="fa fa-search"/> 输入回车或点击搜索</a>
           <div class="dropdown-divider"></div>
-          <a 
-            href="#"
-            class="dropdown-item" 
-            v-for="(filter, id) in items" 
-            @click.prevent="addFilter(filter)"
-            :key="id"
-          ><i v-if="filter.fa" class="fa" :class="filter.fa"/> {{ filter.label }}</a>
+          <template v-for="(filter, id) in items">
+            <a
+              :key="id"
+              href="#"
+              class="dropdown-item" 
+              v-if="filters"
+              @click.prevent="addFilter(filter)"
+            ><i v-if="filter.fa" class="fa" :class="filter.fa"/> {{ filter.label }}</a>
+          </template>
         </div>
       </li>
     </ul>
