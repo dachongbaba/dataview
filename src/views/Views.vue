@@ -118,21 +118,21 @@ export default {
 
     if (!this.$route.query.fetchs) {
       this.datas.fetchs = this.format({
-        method: config.fetchs.method,
-        url: config.fetchs.url
+        method: this.config.fetchs.method,
+        url: this.config.fetchs.url
       });
     } else {
       this.datas.fetchs = this.format(this.datas.fetchs);
     }
 
     if (!this.$route.query.columns) {
-      this.datas.columns = this.format(_.keys(config.columns));
+      this.datas.columns = this.format(_.keys(this.config.columns));
     } else {
       this.datas.columns = this.format(this.datas.columns);
     }
 
     if (!this.$route.query.filters) {
-      this.datas.filters = this.format(_.keys(config.filters));
+      this.datas.filters = this.format(_.keys(this.config.filters));
     } else {
       this.datas.filters = this.format(this.datas.filters);
     }
