@@ -1,5 +1,7 @@
 <template>
   <div v-if="datas">
+    <h2 v-if="datas.title">{{ datas.title }}</h2>
+    <p v-if="datas.desc" class="text-muted">{{ datas.desc }}</p>
     <data-filter 
       :items="datas.filters" 
       :querys.sync="querys"
