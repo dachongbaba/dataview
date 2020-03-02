@@ -160,9 +160,9 @@ export default {
     buildData() {
       return _.merge({}, this.datas, {
         fetchs: this.datas.fetchs ? this.format(this.datas.fetchs) : this.datas.fetchs,
-        columns: this.datas.columns ? JSON.parse(this.datas.columns) : this.datas.columns,
-        filters: this.datas.filters ? JSON.parse(this.datas.filters) : this.datas.filters,
-        options: this.datas.options ? JSON.parse(this.datas.options) : this.datas.options,
+        columns: this.datas.columns ? this.format(this.datas.columns) : this.datas.columns,
+        filters: this.datas.filters ? this.format(this.datas.filters) : this.datas.filters,
+        options: this.datas.options ? this.format(this.datas.options) : this.datas.options,
       });
     },
     buildConfig() {
