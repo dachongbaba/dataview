@@ -134,7 +134,7 @@ export default {
     if (!this.$route.query.filters) {
       this.datas.filters = this.format(_.keys(config.filters));
     } else {
-      this.datas.filters = this.format(this.datas.filterss);
+      this.datas.filters = this.format(this.datas.filters);
     }
   },
   computed: {
