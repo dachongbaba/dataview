@@ -86,7 +86,7 @@
             class="dropdown-item" 
             @click.prevent="submitFilter"
           ><i class="fa fa-search"/> 输入回车或点击搜索</a>
-          <div class="dropdown-divider"></div>
+          <div v-if="items.length" class="dropdown-divider"></div>
           <template v-for="(filter, id) in items">
             <a
               :key="id"
