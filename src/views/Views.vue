@@ -39,6 +39,12 @@
         <small id="viewHelp" class="form-text text-muted">data filter</small>
         <pre id="filterConfig" class="collapse"><code>{{ format(config.filters) }}</code></pre>
       </div>
+
+      <div class="form-group">
+        <textarea id="filter" v-model="datas.options" class="form-control font-weight-bolder" :rows="textline(datas.options)" placeholder="Options" data-toggle="collapse" data-target="#optionsConfig"></textarea>
+        <small id="viewHelp" class="form-text text-muted">data options</small>
+        <pre id="optionsConfig" class="collapse"><code>{{ format(config.options) }}</code></pre>
+      </div>
       <div class="form-group">
         <div class="form-row justify-content-center">
           <div class="col-auto">
@@ -115,6 +121,12 @@ export default {
       filters: '[]',
       options: '{}',
     }, this.$route.query);
+
+    if (!this.$route.query.options) {
+      this.datas.options = this.format({});
+    } else {
+      this.datas.options = this.format(this.datas.options);
+    }
 
     if (!this.$route.query.fetchs) {
       this.datas.fetchs = this.format({
