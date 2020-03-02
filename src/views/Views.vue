@@ -93,13 +93,19 @@ export default {
     };
   },
   async created() {
-    if (this.datas.config) {
-      let res = await axios.get(this.datas.config);
-      this.config = _.merge({}, config, res.data);
+    if (this.$route.query.config) {
+      let response = {};
+      try {
+        response = await axios.get(this.$route.query.config);
+        this.config = _.merge({}, config, response.data || {});
+      } catch (ex) {
+        alert('config ' + this.$route.query.config + ' load error\n' + ex.message + ' ')
+        return
+      }
     } else {
       this.config = _.merge({}, config);
     }
-
+    
     this.datas = _.merge({
       view: '',
       title: '',
