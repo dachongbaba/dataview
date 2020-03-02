@@ -71,8 +71,8 @@
 <script>
 import _ from 'loadsh';
 import axios from 'axios';
-import defultconfig from '../config';
 import buildUrl from 'build-url';
+import defultConfig from '../config';
 
 function fetchData(vm) {
   var fetchs = _.merge({}, vm.config.fetchs, JSON.parse(vm.datas.fetchs));
@@ -103,13 +103,13 @@ export default {
       let response = {};
       try {
         response = await axios.get(this.$route.query.config);
-        this.config = _.merge({}, defultconfig, response.data || {});
+        this.config = _.merge({}, defultConfig, response.data || {});
       } catch (ex) {
         alert('config ' + this.$route.query.config + ' load error\n' + ex.message + ' ')
         return
       }
     } else {
-      this.config = _.merge({}, defultconfig);
+      this.config = _.merge({}, defultConfig);
     }
     
     this.datas = _.merge({

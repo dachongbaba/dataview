@@ -18,7 +18,7 @@
 <script>
 import _ from 'loadsh';
 import axios from 'axios';
-import defultconfig from '../config';
+import defultConfig from '../config';
 import DataTable from '../components/DataTable';
 import DataFilter from '../components/DataFilter';
 
@@ -41,17 +41,16 @@ export default {
       let response = {};
       try {
         response = await axios.get(this.$route.query.config);
-        this.config = _.merge({}, defultconfig, response.data || {});
+        this.config = _.merge({}, defultConfig, response.data || {});
       } catch (ex) {
         alert('config ' + this.$route.query.config + ' load error\n' + ex.message + ' ')
         return
       }
     } else {
-      this.config = _.merge({}, defultconfig);
+      this.config = _.merge({}, defultConfig);
     }
 
     var datas = this.$route.query;
-    
     var options = JSON.parse(datas.options || {});
     var fetchs = JSON.parse(datas.fetchs || {});
     var columns = JSON.parse(datas.columns || []);
