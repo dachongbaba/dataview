@@ -121,14 +121,20 @@ export default {
         method: config.fetchs.method,
         url: config.fetchs.url
       });
+    } else {
+      this.datas.fetchs = this.format(this.datas.fetchs);
     }
 
     if (!this.$route.query.columns) {
       this.datas.columns = this.format(_.keys(config.columns));
+    } else {
+      this.datas.columns = this.format(this.datas.columns);
     }
 
     if (!this.$route.query.filters) {
       this.datas.filters = this.format(_.keys(config.filters));
+    } else {
+      this.datas.filters = this.format(this.datas.filterss);
     }
   },
   computed: {
@@ -152,15 +158,11 @@ export default {
       return this.fetch(this);
     },
     buildData() {
-      var fetchs = JSON.parse(this.datas.fetchs);
-      var columns = JSON.parse(this.datas.columns);
-      var filters = JSON.parse(this.datas.filters);
-      var options = JSON.parse(this.datas.options);
       return _.merge({}, this.datas, {
-        fetchs: JSON.stringify(fetchs),
-        columns: JSON.stringify(columns),
-        filters: JSON.stringify(filters),
-        options: JSON.stringify(options),
+        fetchs: this.datas.fetchs ? this.format(this.datas.fetchs) : this.datas.fetchs,
+        columns: this.datas.columns ? JSON.parse(this.datas.columns) : this.datas.columns,
+        filters: this.datas.filters ? JSON.parse(this.datas.filters) : this.datas.filters,
+        options: this.datas.options ? JSON.parse(this.datas.options) : this.datas.options,
       });
     },
     buildConfig() {
@@ -181,6 +183,9 @@ export default {
       return JSON.stringify(input, null, 2);
     },
     textline(input) {
+      if (!input) {
+        return 1;
+      }
       var len = input.split('\n').length;
       return len || 1;
     }
