@@ -11,39 +11,39 @@
       </div>
 
       <div class="form-group">
-        <textarea v-model="datas.title" class="col form-control font-weight-bolder" :rows="textline(datas.title)" placeholder="Title" data-toggle="collapse" data-target="#titleConfig"></textarea>
-        <small id="viewHelp" class="form-text text-muted">dataview desc</small>
-        <pre id="descConfig" class="collapse"><code>{{ config.title }}</code></pre>
+        <textarea v-model="datas.title" class="col form-control font-weight-bolder" :rows="textline(datas.title)" placeholder="Title" @focus="onFocus('#titleHelp')" @blur="onBlur('#titleHelp')"></textarea>
+        <small id="titleHelp" class="form-text text-muted" data-toggle="collapse" data-target="#titleConfig">dataview title</small>
+        <pre id="titleConfig" class="collapse"><code>{{ config.title }}</code></pre>
       </div>
 
       <div class="form-group">
-        <textarea v-model="datas.desc" class="col form-control font-weight-bolder" :rows="textline(datas.desc)" placeholder="Desc" data-toggle="collapse" data-target="#descConfig"></textarea>
-        <small id="viewHelp" class="form-text text-muted">dataview desc</small>
+        <textarea v-model="datas.desc" class="col form-control font-weight-bolder" :rows="textline(datas.desc)" placeholder="Desc" @focus="onFocus('#descHelp')" @blur="onBlur('#descHelp')"></textarea>
+        <small id="descHelp" class="form-text text-muted" data-toggle="collapse" data-target="#descConfig">dataview desc</small>
         <pre id="descConfig" class="collapse"><code>{{ config.desc }}</code></pre>
       </div>
 
       <div class="form-group">
-          <textarea v-model="datas.fetchs" class="col form-control font-weight-bolder" :rows="textline(datas.fetchs)" placeholder="Fetch" data-toggle="collapse" data-target="#fetchConfig"></textarea>
-          <small id="viewHelp" class="form-text text-muted">data fetch</small>
-          <pre id="fetchConfig" class="collapse"><code>{{ format(config.fetchs) }}</code></pre>
+        <textarea v-model="datas.fetchs" class="col form-control font-weight-bolder" :rows="textline(datas.fetchs)" placeholder="Fetch" @focus="onFocus('#fetchHelp')" @blur="onBlur('#fetchHelp')"></textarea>
+        <small id="fetchHelp" class="form-text text-muted" data-toggle="collapse" data-target="#fetchConfig">dataview fetch</small>
+        <pre id="fetchConfig" class="collapse"><code>{{ format(config.fetchs) }}</code></pre>
       </div>
 
       <div class="form-group">
-        <textarea id="columns" v-model="datas.columns" class="form-control font-weight-bolder" :rows="textline(datas.columns)" placeholder="Column" data-toggle="collapse" data-target="#columnConfig"></textarea>
-        <small id="viewHelp" class="form-text text-muted">data column</small>
+        <textarea v-model="datas.columns" class="form-control font-weight-bolder" :rows="textline(datas.columns)" placeholder="Column" @focus="onFocus('#columnHelp')" @blur="onBlur('#columnHelp')"></textarea>
+        <small id="columnHelp" class="form-text text-muted" data-toggle="collapse" data-target="#columnConfig">dataview column</small>
         <pre id="columnConfig" class="collapse"><code>{{ format(config.columns) }}</code></pre>
       </div>
 
       <div class="form-group">
-        <textarea id="filter" v-model="datas.filters" class="form-control font-weight-bolder" :rows="textline(datas.filters)" placeholder="Filter" data-toggle="collapse" data-target="#filterConfig"></textarea>
-        <small id="viewHelp" class="form-text text-muted">data filter</small>
+        <textarea v-model="datas.filters" class="form-control font-weight-bolder" :rows="textline(datas.filters)" placeholder="Filter" @focus="onFocus('#filterHelp')" @blur="onBlur('#filterHelp')"></textarea>
+        <small id="filterHelp" class="form-text text-muted" data-toggle="collapse" data-target="#filterConfig" >dataview filter</small>
         <pre id="filterConfig" class="collapse"><code>{{ format(config.filters) }}</code></pre>
       </div>
 
       <div class="form-group">
-        <textarea id="filter" v-model="datas.options" class="form-control font-weight-bolder" :rows="textline(datas.options)" placeholder="Options" data-toggle="collapse" data-target="#optionsConfig"></textarea>
-        <small id="viewHelp" class="form-text text-muted">data options</small>
-        <pre id="optionsConfig" class="collapse"><code>{{ format(config.options) }}</code></pre>
+        <textarea v-model="datas.options" class="form-control font-weight-bolder" :rows="textline(datas.options)" placeholder="Options" @focus="onFocus('#optionHelp')" @blur="onBlur('#optionHelp')"></textarea>
+        <small id="optionHelp" class="form-text text-muted" data-toggle="collapse" data-target="#optionConfig">dataview options</small>
+        <pre id="optionConfig" class="collapse"><code>{{ format(config.options) }}</code></pre>
       </div>
       <div class="form-group">
         <div class="form-row justify-content-center">
@@ -193,6 +193,12 @@ export default {
       }
       var len = input.split('\n').length;
       return len || 1;
+    },
+    onFocus(target) {
+      this.jq(target).click();
+    },
+    onBlur(target) {
+      this.jq(target).click();
     }
   }
 };
