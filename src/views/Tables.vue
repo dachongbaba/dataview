@@ -18,7 +18,7 @@
 <script>
 import _ from 'loadsh';
 import axios from 'axios';
-import config from '../config';
+import defultconfig from '../config';
 import DataTable from '../components/DataTable';
 import DataFilter from '../components/DataFilter';
 
@@ -36,49 +36,50 @@ export default {
   },
 
   async created() { 
+    var vm = this;
     if (this.$route.query.config) {
       let response = {};
       try {
         response = await axios.get(this.$route.query.config);
-        this.config = _.merge({}, config, response.data || {});
+        this.config = _.merge({}, defultconfig, response.data || {});
       } catch (ex) {
         alert('config ' + this.$route.query.config + ' load error\n' + ex.message + ' ')
         return
       }
     } else {
-      this.config = _.merge({}, config);
+      this.config = _.merge({}, defultconfig);
     }
 
     var datas = this.$route.query;
-
+    
     var options = JSON.parse(datas.options || {});
     var fetchs = JSON.parse(datas.fetchs || {});
     var columns = JSON.parse(datas.columns || []);
     var filters = JSON.parse(datas.filters || []);
 
-    datas.options = _.merge({}, config.options, options);
-    datas.fetchs = _.merge({}, config.fetchs, fetchs);
-    columns = _.clone(config.columns);
+    datas.options = _.merge({}, this.config.options, options);
+    datas.fetchs = _.merge({}, this.config.fetchs, fetchs);
+
     datas.columns = _.map(columns, (item, key) => {
       if (typeof key === 'number') {
         if (typeof item === 'string') {
-          return config.columns[item];
+          return vm.config.columns[item];
         } else {
           return item;
         }
       }
-      return _.merge({}, config.columns[key] || {}, columns[item] ? columns[item] : {});
+      return _.merge({}, this.config.columns[key] || {}, columns[item] ? columns[item] : {});
     });
     
     datas.filters = _.map(filters, (item, key) => {
       if (typeof key === 'number') {
         if (typeof item === 'string') {
-          return config.filters[item];
+          return vm.config.filters[item];
         } else {
           return item;
         }
       }
-      return _.merge({}, config.filters[key] || {}, filters[item] ? filters[item] : {});
+      return _.merge({}, this.config.filters[key] || {}, filters[item] ? filters[item] : {});
     });
     
     this.datas = _.merge({

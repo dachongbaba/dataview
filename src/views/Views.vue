@@ -71,11 +71,11 @@
 <script>
 import _ from 'loadsh';
 import axios from 'axios';
-import config from '../config';
+import defultconfig from '../config';
 import buildUrl from 'build-url';
 
 function fetchData(vm) {
-  var fetchs = _.merge({}, config.fetchs, JSON.parse(vm.datas.fetchs));
+  var fetchs = _.merge({}, vm.config.fetchs, JSON.parse(vm.datas.fetchs));
   fetchs.params.page = fetchs.pages.page + fetchs.pages.index;
   fetchs.params.size = fetchs.pages.size;
   axios(fetchs).then(function (response) {
@@ -103,13 +103,13 @@ export default {
       let response = {};
       try {
         response = await axios.get(this.$route.query.config);
-        this.config = _.merge({}, config, response.data || {});
+        this.config = _.merge({}, defultconfig, response.data || {});
       } catch (ex) {
         alert('config ' + this.$route.query.config + ' load error\n' + ex.message + ' ')
         return
       }
     } else {
-      this.config = _.merge({}, config);
+      this.config = _.merge({}, defultconfig);
     }
     
     this.datas = _.merge({
@@ -159,13 +159,6 @@ export default {
   },
   
   methods: {
-    async loadConfig(url) {
-      if (url) {
-        let res = await axios.get(url);
-        return res.data;
-      } 
-      return config;
-    },
     fetchData() {
       return this.fetch(this);
     },
