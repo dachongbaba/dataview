@@ -1,7 +1,7 @@
 <template>
   <div v-if="views && views.columns && views.fetchs">
-    <h2 v-if="views.title">{{ datas.title }}</h2>
-    <p v-if="views.desc" class="text-muted">{{ datas.desc }}</p>
+    <h2 v-if="views.title">{{ views.title }}</h2>
+    <p v-if="views.desc" class="text-muted">{{ views.desc }}</p>
     <data-filter 
       :items="views.filters" 
       :filters.sync="filters"
