@@ -32,6 +32,6 @@ module.exports = {
     ],
   },
   devServer: {
-    proxy: 'https://www.xiaoxiongmeishu.com'
+    proxy: 'https://msb-ai.meixiu.mobi'
   }
 }
