@@ -24,6 +24,18 @@ const routes = [
     props: (route) => (route.query)
   },
   {
+    path: '/card',
+    name: 'card',
+    component: () => import('../views/Cards.vue'),
+    props: (route) => (route.query)
+  },
+  {
+    path: '/list',
+    name: 'list',
+    component: () => import('../views/Lists.vue'),
+    props: (route) => (route.query)
+  },
+  {
     path: '/about',
     name: 'about',
     // route level code-splitting

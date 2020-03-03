@@ -1,6 +1,8 @@
 <template>
-  <div id="app" class="container pt-5 pb-5">
-    <router-view />
+  <div id="app" class="container-fluid">
+    <br/>
+    <router-view class="container"/>
+    <br/>
   </div>
 </template>
 

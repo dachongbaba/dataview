@@ -1,33 +1,32 @@
 <template>
-  <div>
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
-          <tr class="table-secondary">
-            <th 
-              v-for="field in fields" 
-              :key="field.data"
-            >
-              {{ field.title || field.data }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr 
-            v-for="(data, row) in datas" 
-            :key="row"
-          >
-            <td
-              v-for="(field, col) in fields" 
-              :key="col"
-            >
-              {{ format(data, field) }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <ul class="list-group">
+    <li class="list-group-item" v-for="(data, row) in datas" :key="row">
+      <div v-if="fields.header" class="d-flex">
+        <template v-for="(field, index) in fields.header">
+          <span :key="index"><b>{{ field.title }}:</b> {{ format(data, field) }}</span>
+        </template>
+      </div>
+      <div v-if="fields.body" class="d-flex">
+        <template v-for="(field, index) in fields.body">
+          <span :key="index"><b>{{ field.title }}:</b> {{ format(data, field) }}</span>
+        </template>
+      </div>
+      <ul v-if="fields.length" class="list-group list-group-flush">
+        <li 
+          class="list-group-item"
+          v-for="(field, col) in fields" 
+          :key="col"
+        >
+          <b>{{ field }}:</b> {{ format(data, field) }}
+        </li>
+      </ul>
+      <div v-if="fields.footer" class="d-flex">
+          <template v-for="(field, index) in fields.footer">
+            <small class="text-muted" :key="index">{{ field.title }}: {{ format(data, field) }}</small>
+          </template>
+        </div>
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -49,6 +48,7 @@ function fetchData(vm, fetchs, filters) {
     pages.size = _.get(response.data, fetchs.paths.sizePath, 20) * 1;
     pages.length = vm.datas.length;
     vm.$emit('update:pages', pages);
+
   }).catch(function (error) {
     console.error(fetch, error);
   }).finally(function () {
@@ -56,12 +56,12 @@ function fetchData(vm, fetchs, filters) {
 }
 
 export default {
-  name: "DataTable",
+  name: "DataList",
   props: {
     fields: {
-      type: Array,
+      type: Object,
       default: function () {
-        return []
+        return {}
       },
     },
     fetchs: {
@@ -120,14 +120,28 @@ export default {
 
   created() {
     var self = this;
-    this.fields.map((field) => {
-      if (field.format) {
-        var params = field.format.split('|');
-        var render = self[params[0]];
-        field.format = (value) => {
-          params[0] = value;
-          return render.apply(self, params);
-        };
+    _.map(this.fields, (field) => {
+      // eslint-disable-next-line valid-typeof
+      if (field.length) {
+        _.map(field, (item) => {
+          if (item.format) {
+            var params = item.format.split('|');
+            var render = self[params[0]];
+            item.format = (value) => {
+              params[0] = value;
+              return render.apply(self, params);
+            };
+          }
+        });
+      } else {
+        if (field.format) {
+          var params = field.format.split('|');
+          var render = self[params[0]];
+          field.format = (value) => {
+            params[0] = value;
+            return render.apply(self, params);
+          };
+        }
       }
     })
     this.fetchData();
@@ -144,13 +158,16 @@ export default {
   
   methods: {
     fetchData() {
-      return this.fetch(this, this.fetchs, this.filters);
+      return this.fetch(this, this.fetchs, this.filters, this.pages);
     },
     resetPage() {
         this.page = this.fetchs.pages.page || 0;
         this.fetchData();
     },
     format(data, field) {
+      if (!field) {
+        return '-';
+      }
       if (field.format) {
         return field.format(data[field.data]);
       }

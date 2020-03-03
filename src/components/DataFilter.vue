@@ -191,7 +191,7 @@ export default {
         }
         
       }
-      this.$emit('update:querys', filters)
+      this.$emit('update:filters', filters);
     }
   },
   components: {

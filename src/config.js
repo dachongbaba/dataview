@@ -3,6 +3,8 @@
 
 const defaultViews = [
   'table',
+  'card',
+  'list',
 ];
 
 const defaultOptions = {};

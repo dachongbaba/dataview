@@ -1,16 +1,26 @@
 <template>
-  <div v-if="datas">
-    <h2 v-if="datas.title">{{ datas.title }}</h2>
-    <p v-if="datas.desc" class="text-muted">{{ datas.desc }}</p>
+  <div v-if="views">
+    <h2 v-if="views.title">{{ datas.title }}</h2>
+    <p v-if="views.desc" class="text-muted">{{ datas.desc }}</p>
     <data-filter 
-      :items="datas.filters" 
-      :querys.sync="querys"
+      :items="views.filters" 
+      :filters.sync="filters"
     />
+    <br/>
     <data-table 
-      :fields="datas.columns" 
-      :fetchs="datas.fetchs"
-      :result.sync="result"
-      :querys="querys" 
+      :fields="views.columns" 
+      :fetchs="views.fetchs"
+      :filters="filters"
+      :pages.sync="pages"
+      :page="page"
+      :size="size"
+    />
+    <br/>
+    <data-page 
+      class="justify-content-center"
+      :page.sync="page"
+      :size.sync="size"
+      :pages="pages"
     />
   </div>
 </template>
@@ -21,17 +31,19 @@ import axios from 'axios';
 import defultConfig from '../config';
 import DataTable from '../components/DataTable';
 import DataFilter from '../components/DataFilter';
+import DataPage from '../components/DataPage';
 
 export default {
   name: "Tables",
-  props: [
-  ],
+  props: [],
   data: function () {
     return {
-      config: null,
-      datas: null,
-      result: null,
-      querys: null,
+      config: {},
+      views: {},
+      filters: {},
+      pages: {},
+      page: null,
+      size: null,
     };
   },
 
@@ -50,16 +62,16 @@ export default {
       this.config = _.merge({}, defultConfig);
     }
 
-    var datas = this.$route.query;
-    var options = JSON.parse(datas.options || {});
-    var fetchs = JSON.parse(datas.fetchs || {});
-    var columns = JSON.parse(datas.columns || []);
-    var filters = JSON.parse(datas.filters || []);
+    var views = this.$route.query;
+    var options = JSON.parse(views.options || {});
+    var fetchs = JSON.parse(views.fetchs || {});
+    var columns = JSON.parse(views.columns || []);
+    var filters = JSON.parse(views.filters || []);
 
-    datas.options = _.merge({}, this.config.options, options);
-    datas.fetchs = _.merge({}, this.config.fetchs, fetchs);
+    views.options = _.merge({}, this.config.options, options);
+    views.fetchs = _.merge({}, this.config.fetchs, fetchs);
 
-    datas.columns = _.map(columns, (item, key) => {
+    views.columns = _.map(columns, (item, key) => {
       if (typeof key === 'number') {
         if (typeof item === 'string') {
           return vm.config.columns[item];
@@ -70,7 +82,7 @@ export default {
       return _.merge({}, vm.config.columns[key], item);
     });
     
-    datas.filters = _.map(filters, (item, key) => {
+    views.filters = _.map(filters, (item, key) => {
       if (typeof key === 'number') {
         if (typeof item === 'string') {
           return vm.config.filters[item];
@@ -81,7 +93,7 @@ export default {
       return _.merge({}, vm.config.filters[key], item);
     });
     
-    this.datas = _.merge({
+    this.views = _.merge({
       view: '',
       title: '',
       desc: '',
@@ -89,12 +101,13 @@ export default {
       columns: '[]',
       filters: '[]',
       options: '{}',
-    }, datas);
+    }, views);
   },
 
   components: {
     DataTable,
-    DataFilter
+    DataFilter,
+    DataPage
   }
 };
 </script>
