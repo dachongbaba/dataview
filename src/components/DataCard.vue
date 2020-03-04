@@ -38,20 +38,24 @@ import axios from 'axios';
 import moment from 'moment';
 
 function fetchData(vm, fetchs, filters) {
-  fetchs.data = filters;
-  fetchs.params.page = (this.page === null ? fetchs.pages.page : this.page) + fetchs.pages.index;
-  fetchs.params.size = (this.size === null ? fetchs.pages.size : this.size);
-  axios(fetchs).then(function (response) {
-    vm.datas = _.get(response.data, fetchs.paths.dataPath, []);
+  var request = _.clone(fetchs);
+  if (request.methods == 'post') {
+    request.data = _.merge({}, fetchs.data, filters);
+  } else {
+    request.params = _.merge({}, fetchs.params, filters);
+  }
+  request.params.page = (this.page === null ? request.pages.page : this.page) + request.pages.index;
+  request.params.size = (this.size === null ? request.pages.size : this.size);
+  axios(request).then(function (response) {
+    vm.datas = _.get(response.data, request.paths.dataPath, []);
 
     var pages = {};
-    pages.page = _.get(response.data, fetchs.paths.pagePath, 0) * 1 - fetchs.pages.index;
-    pages.total = _.get(response.data, fetchs.paths.totalPath, 0) * 1;
-    pages.count = _.get(response.data, fetchs.paths.countPath, 0) * 1;
-    pages.size = _.get(response.data, fetchs.paths.sizePath, 20) * 1;
+    pages.page = _.get(response.data, request.paths.pagePath, 0) * 1 - request.pages.index;
+    pages.total = _.get(response.data, request.paths.totalPath, 0) * 1;
+    pages.count = _.get(response.data, request.paths.countPath, 0) * 1;
+    pages.size = _.get(response.data, request.paths.sizePath, 20) * 1;
     pages.length = vm.datas.length;
     vm.$emit('update:pages', pages);
-
   }).catch(function (error) {
     console.error(fetch, error);
   }).finally(function () {
@@ -161,11 +165,10 @@ export default {
   
   methods: {
     fetchData() {
-      return this.fetch(this, this.fetchs, this.filters, this.pages);
+      return this.fetch(this, this.fetchs, this.filters);
     },
     resetPage() {
-        this.page = this.fetchs.pages.page || 0;
-        this.fetchData();
+      this.$emit('update:page', this.fetchs.pages.page || 0);
     },
     format(data, field) {
       if (!field) {

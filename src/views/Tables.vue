@@ -12,8 +12,8 @@
       :fetchs="views.fetchs"
       :filters="filters"
       :pages.sync="pages"
-      :page="page"
-      :size="size"
+      :page.sync="page"
+      :size.sync="size"
     />
     <br/>
     <data-page 

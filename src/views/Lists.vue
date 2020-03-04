@@ -12,9 +12,9 @@
       :fields="views.columns" 
       :fetchs="views.fetchs"
       :filters="filters"
-      :page="page"
-      :size="size"
       :pages.sync="pages"
+      :page.sync="page"
+      :size.sync="size"
     />
     <br/>
     <data-page
