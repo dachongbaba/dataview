@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div>
     <div class="col mb-4" v-for="(data, row) in datas" :key="row">
       <div class="card">
         <div v-if="fields.header" class="card-header">
@@ -9,16 +9,17 @@
         </div>
         <div v-if="fields.body" class="card-body">
           <template v-for="(field, index) in fields.body">
-            <span :key="index"><b>{{ field.title }}:</b> {{ format(data, field) }}</span>
+            <span :key="index"><b>{{ field.title }}</b> {{ format(data, field) }}</span>
           </template>
         </div>
-        <ul v-if="fields.length" class="list-group list-group-flush">
+        <ul v-if="fields" class="list-group list-group-flush">
           <li 
-            class="list-group-item"
+            class="list-group-item d-flex justify-content-between"
             v-for="(field, col) in fields" 
             :key="col"
           >
-            <b>{{ field }}:</b> {{ format(data, field) }}
+            <span class="text-muted">{{ field.title }}</span>
+            <span>{{ format(data, field) }}</span>
           </li>
         </ul>
         <div v-if="fields.footer" class="card-footer">

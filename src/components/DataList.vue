@@ -1,5 +1,5 @@
 <template>
-  <ul class="list-group">
+  <ul class="list-group list-group-flush">
     <li class="list-group-item" v-for="(data, row) in datas" :key="row">
       <div v-if="fields.header" class="d-flex">
         <template v-for="(field, index) in fields.header">
@@ -11,15 +11,15 @@
           <span :key="index"><b>{{ field.title }}:</b> {{ format(data, field) }}</span>
         </template>
       </div>
-      <ul v-if="fields.length" class="list-group list-group-flush">
-        <li 
-          class="list-group-item"
+      <div v-if="fields" class="d-flex justify-content-between">
+        <div 
+          class="d-flex justify-content-between"
           v-for="(field, col) in fields" 
           :key="col"
         >
-          <b>{{ field }}:</b> {{ format(data, field) }}
-        </li>
-      </ul>
+          <span>{{ format(data, field) }}</span>
+        </div>
+      </div>
       <div v-if="fields.footer" class="d-flex">
           <template v-for="(field, index) in fields.footer">
             <small class="text-muted" :key="index">{{ field.title }}: {{ format(data, field) }}</small>

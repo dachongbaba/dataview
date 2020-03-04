@@ -74,7 +74,7 @@ export default {
     views.columns = _.map(columns, (item, key) => {
       if (typeof key === 'number') {
         if (typeof item === 'string') {
-          return vm.config.columns[item];
+          return item = vm.config.columns[item];
         } else {
           return item;
         }

@@ -8,7 +8,7 @@
     />
     <br/>
     <data-list 
-      class="list-group-flush"
+      class="border-0"
       :fields="views.columns" 
       :fetchs="views.fetchs"
       :filters="filters"
@@ -73,9 +73,9 @@ export default {
     views.fetchs = _.merge({}, this.config.fetchs, fetchs);
 
     views.columns = {};
-    _.map(columns, (items, keys) => {
-      if (keys == 'header' || keys == 'body' || keys == 'footer') {
-        views.columns[keys] = _.map(items, (item, key) => {
+    _.map(columns, (field, index) => {
+      if (index == 'header' || index == 'body' || index == 'footer') {
+        views.columns[index] = _.map(field, (item, key) => {
           if (typeof key === 'number') {
             if (typeof item === 'string') {
               return vm.config.columns[item];
@@ -86,14 +86,14 @@ export default {
           return _.merge({}, vm.config.columns[key], item);
         });
       } else {
-        if (typeof keys === 'number') {
-          if (typeof items === 'string') {
-            views.columns[keys] = vm.config.columns[items];
+        if (typeof index === 'number') {
+          if (typeof field === 'string') {
+            return views.columns[index] = vm.config.columns[field];
           } else {
-            views.columns[keys] = items;
+            return views.columns[index] = field;
           }
         }
-        views.columns[keys] = _.merge({}, vm.config.columns[keys], items);
+        return views.columns[index] = _.merge({}, vm.config.columns[index], field);
       }
     });
 
