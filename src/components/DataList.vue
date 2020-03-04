@@ -36,7 +36,7 @@ import moment from 'moment';
 
 function fetchData(vm, fetchs, filters) {
   var request = _.clone(fetchs);
-  if (request.methods == 'post') {
+  if (request.data) {
     request.data = _.merge({}, fetchs.data, filters);
   } else {
     request.params = _.merge({}, fetchs.params, filters);
