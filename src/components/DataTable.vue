@@ -172,6 +172,10 @@ export default {
       stat = JSON.parse(stat);
       return stat[value] || value || '-';
     },
+    formatObject(value, stat = "") {
+      stat = JSON.parse(stat);
+      return stat[value] || value || "-";
+    }
   }
 };
 </script>
