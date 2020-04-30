@@ -15,7 +15,7 @@
     "build-url": "^2.0.0",
     "core-js": "^3.6.4",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "loadsh": "0.0.4",
     "luxon": "^1.22.0",
     "moment": "^2.24.0",
