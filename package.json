@@ -10,7 +10,7 @@
     "github": "cross-env REPO_URL=https://github.com/dachongbaba/dataview.git npm run publish"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.4.1",
     "build-url": "^2.0.0",
     "core-js": "^3.6.4",
